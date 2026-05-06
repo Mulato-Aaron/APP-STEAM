@@ -1,0 +1,34 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "steamcrud",
+          "appId": "1:143482882099:android:d503a634a37d251ef67b46",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "steamcrud",
+          "configurations": {
+            "android": "1:143482882099:android:d503a634a37d251ef67b46",
+            "web": "1:143482882099:web:f8c2084b51d46ab6f67b46"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "nam5",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "providers": {
+      "anonymous": true,
+      "emailPassword": true
+    }
+  }
+}

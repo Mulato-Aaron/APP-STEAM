@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "143482882099",
+    "project_id": "steamcrud",
+    "storage_bucket": "steamcrud.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143482882099:android:84a5598ed257113ef67b46",
+        "android_client_info": {
+          "package_name": "com.example.appsteam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqIFnii1j9GwrJh8mbD-8aDzxw2UHzFkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143482882099:android:d503a634a37d251ef67b46",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqIFnii1j9GwrJh8mbD-8aDzxw2UHzFkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

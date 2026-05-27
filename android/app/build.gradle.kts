@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "com.example.myapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myapp"
-        minSdk = 21
-        targetSdk = 33
+        applicationId = "com.mulatoaaron.proyecto5"
+        minSdk = 23
+        targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
         multiDexEnabled = true
     }
 

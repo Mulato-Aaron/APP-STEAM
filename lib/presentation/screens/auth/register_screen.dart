@@ -15,7 +15,7 @@ class RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
       body: Container(
@@ -51,6 +51,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                           labelText: 'Email',
                           prefixIcon: Icon(Icons.email),
                         ),
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 20),
                       TextField(
@@ -61,21 +62,28 @@ class RegisterScreenState extends State<RegisterScreen> {
                         ),
                         obscureText: true,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          textStyle: const TextStyle(fontSize: 16)
+                        ),
                         onPressed: () {
                           authProvider.createUserWithEmailAndPassword(
-                            _emailController.text,
-                            _passwordController.text,
+                            context, // Pasamos el contexto
+                            _emailController.text.trim(),
+                            _passwordController.text.trim(),
                           );
                         },
-                        child: const Text('Register'),
+                        child: const Text('Registrar'),
                       ),
+                      const SizedBox(height: 10),
                       TextButton(
                         onPressed: () {
-                          authProvider.isLogin = true;
+                          // Usamos el provider para cambiar el estado
+                          context.read<AuthProvider>().isLogin = true;
                         },
-                        child: const Text('Ya tienes una cuenta? Inicia sesión'),
+                        child: const Text('¿Ya tienes una cuenta? Inicia sesión'),
                       ),
                     ],
                   ),

@@ -15,7 +15,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
       body: Container(
@@ -51,6 +51,7 @@ class LoginScreenState extends State<LoginScreen> {
                           labelText: 'Email',
                           prefixIcon: Icon(Icons.email),
                         ),
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 20),
                       TextField(
@@ -61,21 +62,27 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                         obscureText: true,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       ElevatedButton(
+                         style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          textStyle: const TextStyle(fontSize: 16)
+                        ),
                         onPressed: () {
                           authProvider.signInWithEmailAndPassword(
-                            _emailController.text,
-                            _passwordController.text,
+                            context, // Pasamos el contexto
+                            _emailController.text.trim(),
+                            _passwordController.text.trim(),
                           );
                         },
                         child: const Text('Login'),
                       ),
+                       const SizedBox(height: 10),
                       TextButton(
                         onPressed: () {
-                          authProvider.isLogin = false;
+                          context.read<AuthProvider>().isLogin = false;
                         },
-                        child: const Text('No tienes cuenta? Regístrate'),
+                        child: const Text('¿No tienes cuenta? Regístrate'),
                       ),
                     ],
                   ),

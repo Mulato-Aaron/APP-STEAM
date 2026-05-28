@@ -29,6 +29,11 @@ class CartProvider with ChangeNotifier {
     return total;
   }
 
+  // Nuevo método para verificar si un juego está en el carrito
+  bool isInCart(String gameId) {
+    return _items.containsKey(gameId);
+  }
+
   Future<void> _saveCart() async {
     final prefs = await SharedPreferences.getInstance();
     try {
@@ -68,23 +73,15 @@ class CartProvider with ChangeNotifier {
   }
 
   void addItem(Game game) {
+    // Si el juego ya está, no hacemos nada, porque el botón no debería estar visible.
     if (_items.containsKey(game.id)) {
-      _items.update(
-        game.id!,
-        (existingCartItem) => CartItem(
-          id: existingCartItem.id,
-          title: existingCartItem.title,
-          quantity: existingCartItem.quantity + 1,
-          price: existingCartItem.price,
-          imageUrl: existingCartItem.imageUrl, // Mantener la imagen
-        ),
-      );
-    } else {
-      _items.putIfAbsent(
-        game.id!,
-        () => CartItem.fromGame(game), // Usamos el factory para consistencia
-      );
+      return; 
     }
+    // Se añade siempre con cantidad 1.
+    _items.putIfAbsent(
+      game.id!,
+      () => CartItem.fromGame(game), // Asume cantidad 1 desde el factory
+    );
     notifyListeners();
     _saveCart();
   }
@@ -95,6 +92,7 @@ class CartProvider with ChangeNotifier {
     _saveCart();
   }
 
+  // Ya no necesitamos la lógica de cantidad, pero mantenemos el método por si se usa en otro lado.
   void removeSingleItem(String productId) {
     if (!_items.containsKey(productId)) {
       return;
@@ -107,7 +105,7 @@ class CartProvider with ChangeNotifier {
           title: existingCartItem.title,
           quantity: existingCartItem.quantity - 1,
           price: existingCartItem.price,
-          imageUrl: existingCartItem.imageUrl, // Mantener la imagen
+          imageUrl: existingCartItem.imageUrl,
         ),
       );
     } else {

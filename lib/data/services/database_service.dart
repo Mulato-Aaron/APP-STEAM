@@ -63,7 +63,6 @@ class DatabaseService {
       developer.log('¡Pedido realizado con éxito en Firestore!', name: 'DatabaseService.placeOrder');
 
     } catch (e, s) {
-      // ¡CAMBIO IMPORTANTE! Usamos e.toString() para ver el mensaje completo.
       final errorMessage = 'Error al realizar el pedido en Firestore: ${e.toString()}';
       developer.log(
         errorMessage,
@@ -72,7 +71,6 @@ class DatabaseService {
         stackTrace: s,
         level: 1000, 
       );
-      // Re-lanzamos el error con el mensaje detallado.
       throw Exception('Ocurrió un error al procesar tu pedido. Detalles: ${e.toString()}');
     }
   }
@@ -98,7 +96,7 @@ class DatabaseService {
     });
   }
 
-  // Nuevo método para obtener solo los IDs de los juegos del usuario
+  // Método que obtiene los IDs como un Future (se mantiene por si es usado en otro lado)
   Future<List<String>> getOwnedGameIds(String userId) async {
     try {
       var snapshot = await _db
@@ -116,5 +114,17 @@ class DatabaseService {
       return []; // Devolver lista vacía en caso de error
     }
   }
-
+  
+  // NUEVO MÉTODO: Devuelve un Stream con la lista de IDs de juegos del usuario
+  Stream<List<String>> getOwnedGameIdsStream(String userId) {
+    return _db
+        .collection('users')
+        .doc(userId)
+        .collection('library')
+        .snapshots()
+        .map((snapshot) {
+          // Mapea cada documento a su ID y lo convierte en una lista.
+          return snapshot.docs.map((doc) => doc.id).toList();
+        });
+  }
 }

@@ -4,6 +4,7 @@ import 'package:proyecto_5_semestre/data/services/database_service.dart';
 import 'package:proyecto_5_semestre/models/game.dart';
 import 'package:proyecto_5_semestre/presentation/widgets/admin/product_form.dart';
 
+// Forzando un reinicio en caliente para refrescar la UI
 class ProductManagementScreen extends StatelessWidget {
   const ProductManagementScreen({super.key});
 
@@ -29,12 +30,11 @@ class ProductManagementScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gestión de Productos'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => showProductForm(),
-          ),
-        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showProductForm(),
+        tooltip: 'Añadir Producto',
+        child: const Icon(Icons.add),
       ),
       body: StreamBuilder<List<Game>>(
         stream: dbService.getGames(),
@@ -46,7 +46,10 @@ class ProductManagementScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error.toString()}'));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay productos.'));
+            return const Center(
+              child: Center(
+                  child: Text('No hay productos. Toca + para añadir uno.')),
+            );
           }
 
           final games = snapshot.data!;
@@ -80,11 +83,13 @@ class ProductManagementScreen extends StatelessWidget {
                                   '¿Estás seguro de que quieres eliminar este producto?'),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
                                   child: const Text('Cancelar'),
                                 ),
                                 TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
                                   child: const Text('Eliminar'),
                                 ),
                               ],
@@ -93,7 +98,7 @@ class ProductManagementScreen extends StatelessWidget {
 
                           if (confirm == true) {
                             if (context.mounted) {
-                               dbService.deleteGame(game.id!);
+                              dbService.deleteGame(game.id!);
                             }
                           }
                         },

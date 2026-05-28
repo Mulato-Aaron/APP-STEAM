@@ -1,34 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Game {
   final String? id;
-  final String name;
-  final String genre;
+  final String title;
+  final String description;
   final double price;
+  final int stock;
+  final String imageUrl;
+  final String category;
 
   Game({
     this.id,
-    required this.name,
-    required this.genre,
+    required this.title,
+    required this.description,
     required this.price,
+    required this.stock,
+    required this.imageUrl,
+    required this.category,
   });
 
-  // Factory constructor to create a Game from a map (Firestore document)
-  // This now uses the Spanish field names from your database.
-  factory Game.fromMap(Map<String, dynamic> map, String id) {
+  // Factory constructor to create a Game from a Firestore document
+  factory Game.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Game(
-      id: id,
-      name: map['Nombre'] as String, // Was 'name'
-      genre: map['Genero'] as String, // Was 'genre'
-      price: (map['Precio'] as num).toDouble(), // Was 'price'
+      id: doc.id,
+      title: data['title'] ?? '',
+      description: data['description'] ?? '',
+      price: (data['price'] as num?)?.toDouble() ?? 0.0,
+      stock: (data['stock'] as num?)?.toInt() ?? 0,
+      imageUrl: data['imageUrl'] ?? '',
+      category: data['category'] ?? '',
     );
   }
 
   // Method to convert a Game object to a map for Firestore
-  // This now writes the Spanish field names to your database.
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toFirestore() {
     return {
-      'Nombre': name, // Was 'name'
-      'Genero': genre, // Was 'genre'
-      'Precio': price, // Was 'price'
+      'title': title,
+      'description': description,
+      'price': price,
+      'stock': stock,
+      'imageUrl': imageUrl,
+      'category': category,
     };
   }
 }

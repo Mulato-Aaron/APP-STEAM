@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'dart:developer' as developer;
 import 'data/services/database_service.dart';
 import 'firebase_options.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/cart_provider.dart';
 import 'core/theme/app_theme.dart';
-import 'presentation/screens/shared/auth_wrapper.dart'; // Importamos el nuevo wrapper
+import 'presentation/screens/shared/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,45 +14,25 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final dbService = DatabaseService();
-
-  // Intentamos añadir el producto de ejemplo, pero de forma segura.
-  try {
-    developer.log('Intentando añadir producto de ejemplo si es necesario...',
-        name: 'main.startup');
-    await dbService.addSampleProduct();
-    developer.log('Operación de producto de ejemplo completada.',
-        name: 'main.startup');
-  } catch (e, s) {
-    developer.log(
-      'No se pudo añadir el producto de ejemplo. Esto es seguro y la app continuará.',
-      name: 'main.startup',
-      error: e,
-      stackTrace: s,
-    );
-  }
-
-  runApp(MyApp(dbService: dbService));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final DatabaseService dbService;
-
-  const MyApp({super.key, required this.dbService});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        Provider<DatabaseService>(create: (_) => dbService),
+        Provider<DatabaseService>(create: (_) => DatabaseService()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
       child: MaterialApp(
-        title: 'Proyecto 5',
+        title: 'Tienda de Juegos',
         theme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
-        home: const AuthWrapper(), // ¡Aquí está el cambio clave!
+        home: const AuthWrapper(),
       ),
     );
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/cart_provider.dart';
-import '../../../data/services/database_service.dart';
-import '../../providers/auth_provider.dart';
+import 'package:proyecto_5_semestre/models/user_order.dart';
+import 'package:proyecto_5_semestre/presentation/providers/auth_provider.dart';
+import 'package:proyecto_5_semestre/presentation/providers/cart_provider.dart';
+import 'package:proyecto_5_semestre/data/services/database_service.dart';
+import 'package:proyecto_5_semestre/models/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -10,7 +12,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
-    final dbService = Provider.of<DatabaseService>(context, listen: false);
+    final dbService = DatabaseService();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
@@ -45,27 +47,20 @@ class CartScreen extends StatelessWidget {
                         ? null
                         : () async {
                             final user = authProvider.currentUser;
-                            if (user == null) {
-                              return;
-                            }
+                            if (user == null) return;
 
-                            await dbService.placeOrder(
-                              user.uid,
-                              cart.items.values
-                                  .map((item) => {
-                                        'productId': item.id,
-                                        'productName': item.name,
-                                        'quantity': item.quantity,
-                                        'price': item.price,
-                                      })
-                                  .toList(),
-                              cart.totalAmount,
+                            final newOrder = UserOrder(
+                              userId: user.uid,
+                              items: cart.items.values.toList(),
+                              total: cart.totalAmount,
+                              createdAt: DateTime.now(),
                             );
+
+                            await dbService.placeOrder(newOrder);
 
                             if (!context.mounted) return;
 
-                            Provider.of<CartProvider>(context, listen: false)
-                                .clearCart();
+                            Provider.of<CartProvider>(context, listen: false).clearCart();
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -131,9 +126,10 @@ class CartItemWidget extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(cartItem.imageUrl),
+              // TODO: Necesitamos una imagen para el CartItem. Usaremos un placeholder.
+              child: Text(cartItem.title[0]),
             ),
-            title: Text(cartItem.name),
+            title: Text(cartItem.title),
             subtitle: Text(
                 'Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
             trailing: Text('${cartItem.quantity} x'),

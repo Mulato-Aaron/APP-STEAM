@@ -1,24 +1,9 @@
-import 'package:flutter/material.dart';
-import '../../domain/models/product_model.dart';
-
-class CartItem {
-  final String id;
-  final String name;
-  final int quantity;
-  final double price;
-  final String imageUrl;
-
-  CartItem({
-    required this.id,
-    required this.name,
-    required this.quantity,
-    required this.price,
-    required this.imageUrl,
-  });
-}
+import 'package:flutter/foundation.dart';
+import 'package:proyecto_5_semestre/models/cart_item.dart';
+import 'package:proyecto_5_semestre/models/game.dart';
 
 class CartProvider with ChangeNotifier {
-  final Map<String, CartItem> _items = {};
+  Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
     return {..._items};
@@ -36,26 +21,26 @@ class CartProvider with ChangeNotifier {
     return total;
   }
 
-  void addItem(Product product) {
-    if (_items.containsKey(product.id)) {
+  void addItem(Game game) {
+    if (_items.containsKey(game.id)) {
+      // Si ya existe, aumenta la cantidad
       _items.update(
-        product.id,
+        game.id!,
         (existingCartItem) => CartItem(
           id: existingCartItem.id,
-          name: existingCartItem.name,
-          price: existingCartItem.price,
-          imageUrl: existingCartItem.imageUrl,
+          title: existingCartItem.title,
           quantity: existingCartItem.quantity + 1,
+          price: existingCartItem.price,
         ),
       );
     } else {
+      // Si es nuevo, lo añade al carrito
       _items.putIfAbsent(
-        product.id,
+        game.id!,
         () => CartItem(
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          imageUrl: product.imageUrl,
+          id: game.id!,
+          title: game.title,
+          price: game.price,
           quantity: 1,
         ),
       );
@@ -72,15 +57,15 @@ class CartProvider with ChangeNotifier {
     if (!_items.containsKey(productId)) {
       return;
     }
-    if ((_items[productId]?.quantity ?? 0) > 1) {
+    if (_items[productId]!.quantity > 1) {
       _items.update(
         productId,
         (existingCartItem) => CartItem(
-            id: existingCartItem.id,
-            name: existingCartItem.name,
-            quantity: existingCartItem.quantity - 1,
-            price: existingCartItem.price,
-            imageUrl: existingCartItem.imageUrl),
+          id: existingCartItem.id,
+          title: existingCartItem.title,
+          quantity: existingCartItem.quantity - 1,
+          price: existingCartItem.price,
+        ),
       );
     } else {
       _items.remove(productId);
@@ -89,7 +74,7 @@ class CartProvider with ChangeNotifier {
   }
 
   void clearCart() {
-    _items.clear();
+    _items = {};
     notifyListeners();
   }
 }

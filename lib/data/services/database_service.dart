@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proyecto_5_semestre/models/game.dart';
 import 'package:proyecto_5_semestre/models/user_order.dart';
+import 'dart:developer' as developer; // Importa el logger
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -26,29 +27,54 @@ class DatabaseService {
 
   // --- Order Management ---
   Future<void> placeOrder(UserOrder order) async {
-    WriteBatch batch = _db.batch();
+    developer.log(
+      'Intentando realizar el pedido...',
+      name: 'DatabaseService.placeOrder',
+      error: 'UserID: ${order.userId}, Items: ${order.items.length}, Total: ${order.total}',
+    );
 
-    // 1. Crea el documento del pedido en la colección /orders
-    DocumentReference orderRef = _db.collection('orders').doc();
-    batch.set(orderRef, order.toFirestore());
+    try {
+      WriteBatch batch = _db.batch();
 
-    // 2. Añade cada juego a la biblioteca del usuario
-    for (var item in order.items) {
-      DocumentReference libraryRef = _db
-          .collection('users')
-          .doc(order.userId)
-          .collection('library')
-          .doc(item.id); // Usa el ID del producto como ID del documento
+      DocumentReference orderRef = _db.collection('orders').doc();
+      batch.set(orderRef, order.toFirestore());
 
-      batch.set(libraryRef, {
-        'productId': item.id,
-        'title': item.title,
-        'purchaseDate': order.createdAt,
-      });
+      if (order.items.isEmpty) {
+        throw Exception('No se puede procesar un pedido sin artículos.');
+      }
+      
+      for (var item in order.items) {
+        DocumentReference libraryRef = _db
+            .collection('users')
+            .doc(order.userId)
+            .collection('library')
+            .doc(item.id);
+
+        batch.set(libraryRef, {
+          'productId': item.id,
+          'title': item.title,
+          'purchaseDate': order.createdAt,
+          'imageUrl': item.imageUrl,
+        });
+      }
+
+      await batch.commit();
+
+      developer.log('¡Pedido realizado con éxito en Firestore!', name: 'DatabaseService.placeOrder');
+
+    } catch (e, s) {
+      // ¡CAMBIO IMPORTANTE! Usamos e.toString() para ver el mensaje completo.
+      final errorMessage = 'Error al realizar el pedido en Firestore: ${e.toString()}';
+      developer.log(
+        errorMessage,
+        name: 'DatabaseService.placeOrder',
+        error: e,
+        stackTrace: s,
+        level: 1000, 
+      );
+      // Re-lanzamos el error con el mensaje detallado.
+      throw Exception('Ocurrió un error al procesar tu pedido. Detalles: ${e.toString()}');
     }
-
-    // 3. Confirma el lote atómico
-    await batch.commit();
   }
 
    Stream<List<Game>> getUserLibrary(String userId) {
@@ -60,11 +86,12 @@ class DatabaseService {
         .asyncMap((snapshot) async {
       List<Game> libraryGames = [];
       for (var doc in snapshot.docs) {
-        // Asumiendo que 'productId' está guardado en el documento de la biblioteca
-        String productId = doc.data()['productId'];
-        DocumentSnapshot gameDoc = await _db.collection('products').doc(productId).get();
-        if (gameDoc.exists) {
-          libraryGames.add(Game.fromFirestore(gameDoc));
+        String? productId = doc.data()['productId'];
+        if(productId != null) {
+          DocumentSnapshot gameDoc = await _db.collection('products').doc(productId).get();
+          if (gameDoc.exists) {
+            libraryGames.add(Game.fromFirestore(gameDoc));
+          }
         }
       }
       return libraryGames;

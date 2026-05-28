@@ -5,12 +5,14 @@ class CartItem {
   final String title;
   final int quantity;
   final double price;
+  final String imageUrl; // <-- AÑADIDO
 
   CartItem({
     required this.id,
     required this.title,
     required this.quantity,
     required this.price,
+    required this.imageUrl, // <-- AÑADIDO
   });
 
   // From Game to CartItem
@@ -20,6 +22,7 @@ class CartItem {
       title: game.title,
       quantity: 1,
       price: game.price,
+      imageUrl: game.imageUrl, // <-- AÑADIDO
     );
   }
   
@@ -30,6 +33,7 @@ class CartItem {
       'title': title,
       'quantity': quantity,
       'price': price,
+      'imageUrl': imageUrl, // <-- AÑADIDO
     };
   }
 
@@ -39,6 +43,7 @@ class CartItem {
       title: map['title'],
       quantity: map['quantity'],
       price: map['price'],
+      imageUrl: map['imageUrl'] ?? '', // <-- AÑADIDO (con fallback)
     );
   }
 }

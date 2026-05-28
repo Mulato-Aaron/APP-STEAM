@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:proyecto_5_semestre/models/cart_item.dart';
 import 'package:proyecto_5_semestre/models/game.dart';
+import 'dart:developer' as developer;
 
 class CartProvider with ChangeNotifier {
   Map<String, CartItem> _items = {};
@@ -30,10 +31,15 @@ class CartProvider with ChangeNotifier {
 
   Future<void> _saveCart() async {
     final prefs = await SharedPreferences.getInstance();
-    final cartData = json.encode({
-      'items': _items.map((key, item) => MapEntry(key, item.toMap())).values.toList(),
-    });
-    await prefs.setString('cart', cartData);
+    try {
+       final cartData = json.encode({
+        'items': _items.values.map((item) => item.toMap()).toList(),
+      });
+      await prefs.setString('cart', cartData);
+      developer.log('Carrito guardado exitosamente.', name: 'CartProvider');
+    } catch (e) {
+      developer.log('Error al guardar el carrito: $e', name: 'CartProvider', level: 1000);
+    }
   }
 
   Future<void> loadCart() async {
@@ -41,15 +47,24 @@ class CartProvider with ChangeNotifier {
     if (!prefs.containsKey('cart')) {
       return;
     }
-    final extractedData = json.decode(prefs.getString('cart')!) as Map<String, dynamic>;
-    final List<dynamic> itemsList = extractedData['items'];
-    
-    _items = {};
-    for (var itemData in itemsList) {
-      final cartItem = CartItem.fromMap(itemData as Map<String, dynamic>);
-      _items[cartItem.id] = cartItem;
+    try {
+      final extractedData = json.decode(prefs.getString('cart')!) as Map<String, dynamic>;
+      final List<dynamic> itemsList = extractedData['items'];
+      
+      _items = {};
+      for (var itemData in itemsList) {
+        final cartItem = CartItem.fromMap(itemData as Map<String, dynamic>);
+        _items[cartItem.id] = cartItem;
+      }
+      notifyListeners();
+       developer.log('Carrito cargado exitosamente.', name: 'CartProvider');
+    } catch (e) {
+       developer.log('Error al cargar el carrito: $e', name: 'CartProvider', level: 1000);
+       // Si hay un error, limpiar el carrito para evitar corrupción
+       await prefs.remove('cart');
+       _items = {};
+       notifyListeners();
     }
-    notifyListeners();
   }
 
   void addItem(Game game) {
@@ -61,17 +76,13 @@ class CartProvider with ChangeNotifier {
           title: existingCartItem.title,
           quantity: existingCartItem.quantity + 1,
           price: existingCartItem.price,
+          imageUrl: existingCartItem.imageUrl, // Mantener la imagen
         ),
       );
     } else {
       _items.putIfAbsent(
         game.id!,
-        () => CartItem(
-          id: game.id!,
-          title: game.title,
-          price: game.price,
-          quantity: 1,
-        ),
+        () => CartItem.fromGame(game), // Usamos el factory para consistencia
       );
     }
     notifyListeners();
@@ -96,6 +107,7 @@ class CartProvider with ChangeNotifier {
           title: existingCartItem.title,
           quantity: existingCartItem.quantity - 1,
           price: existingCartItem.price,
+          imageUrl: existingCartItem.imageUrl, // Mantener la imagen
         ),
       );
     } else {
@@ -105,9 +117,11 @@ class CartProvider with ChangeNotifier {
     _saveCart();
   }
 
-  void clearCart() {
+  Future<void> clearCart() async {
     _items = {};
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('cart');
     notifyListeners();
-    _saveCart();
+    developer.log('Carrito limpiado y caché eliminada.', name: 'CartProvider');
   }
 }

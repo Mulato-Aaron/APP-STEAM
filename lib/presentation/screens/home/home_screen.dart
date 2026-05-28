@@ -36,6 +36,17 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(_selectedIndex == 0 ? 'Tienda de Juegos' : 'Mi Biblioteca'),
         actions: [
+          // BOTÓN TEMPORAL PARA LIMPIAR EL CARRITO
+          IconButton(
+            icon: const Icon(Icons.cleaning_services),
+            tooltip: 'Limpiar Carrito Cache',
+            onPressed: () {
+              Provider.of<CartProvider>(context, listen: false).clearCart();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Caché del carrito limpiada.')),
+              );
+            },
+          ),
           Consumer<CartProvider>(
             builder: (_, cart, ch) => Badge(
               label: Text(cart.itemCount.toString()),

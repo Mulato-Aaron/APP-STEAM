@@ -98,4 +98,23 @@ class DatabaseService {
     });
   }
 
+  // Nuevo método para obtener solo los IDs de los juegos del usuario
+  Future<List<String>> getOwnedGameIds(String userId) async {
+    try {
+      var snapshot = await _db
+          .collection('users')
+          .doc(userId)
+          .collection('library')
+          .get();
+      return snapshot.docs.map((doc) => doc.id).toList();
+    } catch (e) {
+      developer.log(
+        'Error al obtener los IDs de la biblioteca: ${e.toString()}',
+        name: 'DatabaseService.getOwnedGameIds',
+        error: e,
+      );
+      return []; // Devolver lista vacía en caso de error
+    }
+  }
+
 }

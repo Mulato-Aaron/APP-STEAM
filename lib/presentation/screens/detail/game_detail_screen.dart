@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/models/game.dart';
 import 'package:proyecto_5_semestre/presentation/providers/cart_provider.dart';
+import 'package:proyecto_5_semestre/presentation/providers/catalog_provider.dart'; // Importar CatalogProvider
+import 'package:proyecto_5_semestre/presentation/screens/user/library_screen.dart'; // Importar LibraryScreen
 
 class GameDetailScreen extends StatelessWidget {
   final Game game;
@@ -11,25 +12,37 @@ class GameDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartProvider>(context, listen: false);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(game.title),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: theme.colorScheme.primary,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Hero(
-              tag: 'gameImage-${game.id}', // Etiqueta Hero correspondiente
-              child: Image.network(
-                game.imageUrl,
-                fit: BoxFit.cover,
-                height: 300,
-              ),
-            ),
+            game.imageUrl.isNotEmpty
+                ? Image.network(
+                    game.imageUrl,
+                    fit: BoxFit.cover,
+                    height: 300,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 300,
+                        color: Colors.grey[800],
+                        child: const Center(
+                          child: Icon(Icons.broken_image, size: 100, color: Colors.grey),
+                        ),
+                      );
+                    },
+                  )
+                : Container(
+                    height: 300,
+                    color: Colors.grey[800],
+                    child: const Icon(Icons.videogame_asset_off, size: 100, color: Colors.grey),
+                  ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -37,71 +50,80 @@ class GameDetailScreen extends StatelessWidget {
                 children: [
                   Text(
                     game.title,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     '\$${game.price.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      color: Colors.amber,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: theme.colorScheme.secondary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Género: ${game.genre}',
-                    style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Lanzamiento: ${game.releaseDate}',
-                     style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-                  ),
-                  const SizedBox(height: 16),
-                   const Divider(),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Descripción',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
                   Text(
                     game.description,
-                    textAlign: TextAlign.justify,
-                    style: const TextStyle(fontSize: 16, height: 1.5),
+                    style: theme.textTheme.bodyMedium,
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 24),
+                  // Lógica condicional del botón con Consumer
+                  Consumer<CatalogProvider>(
+                    builder: (context, catalog, child) {
+                      // Es crucial manejar el caso de que el id sea null
+                      final isOwned = game.id != null ? catalog.isGameOwned(game.id!) : false;
+
+                      if (isOwned) {
+                        // Botón para ir a la biblioteca si ya se posee el juego
+                        return SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.library_books),
+                            label: const Text('Ver en la Biblioteca'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LibraryScreen()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              backgroundColor: Colors.grey[700], // Un color distintivo
+                            ),
+                          ),
+                        );
+                      } else {
+                        // Botón para añadir al carrito si no se posee
+                        return SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.shopping_cart_checkout),
+                            label: const Text('Añadir al Carrito'),
+                            onPressed: () {
+                              context.read<CartProvider>().addItem(game);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${game.title} añadido al carrito.'),
+                                  duration: const Duration(seconds: 2),
+                                  backgroundColor: theme.colorScheme.secondary,
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          cart.addItem(game);
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${game.title} añadido al carrito!'),
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        },
-        label: const Text('Añadir al Carrito'),
-        icon: const Icon(Icons.shopping_cart_checkout),
-        backgroundColor: Colors.amber[800],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

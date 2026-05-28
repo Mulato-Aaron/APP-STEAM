@@ -22,7 +22,7 @@ class AuthService with ChangeNotifier {
       notifyListeners();
       return _user;
     } catch (e) {
-      print(e);
+      debugPrint('Error during anonymous sign in: $e');
       return null;
     }
   }
@@ -37,7 +37,7 @@ class AuthService with ChangeNotifier {
       notifyListeners();
       return _user;
     } catch (e) {
-      print(e);
+      debugPrint('Error during email sign in: $e');
       return null;
     }
   }
@@ -52,7 +52,7 @@ class AuthService with ChangeNotifier {
       notifyListeners();
       return _user;
     } catch (e) {
-      print(e);
+      debugPrint('Error during email sign up: $e');
       return null;
     }
   }

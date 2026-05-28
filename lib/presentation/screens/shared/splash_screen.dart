@@ -9,10 +9,10 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } else {
-        Navigator.of(src/main/kotlin/com/example/myapp/MainActivity.kt).pushReplacement(
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const AuthGate()),
         );
       }
@@ -37,8 +37,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlutterLogo(size: 100), // Placeholder, reemplazar con el logo real
-            SizedBox(height: 20),
+            const FlutterLogo(size: 100), // Placeholder, reemplazar con el logo real
+            const SizedBox(height: 20),
             Text(
               'Cargando...',
               style: Theme.of(context).textTheme.titleLarge,

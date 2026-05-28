@@ -10,8 +10,8 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
-    final dbService = Provider.of<DatabaseService>(context);
-    final authProvider = Provider.of<AuthProvider>(context);
+    final dbService = Provider.of<DatabaseService>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +33,7 @@ class CartScreen extends StatelessWidget {
                   const Spacer(),
                   Chip(
                     label: Text(
-                      '\${cart.totalAmount.toStringAsFixed(2)}',
+                      '\$${cart.totalAmount.toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: Colors.white,
                       ),
@@ -41,28 +41,38 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   TextButton(
-                    onPressed: (cart.totalAmount <= 0) ? null : () async {
-                      final user = authProvider.user;
-                      if (user != null) {
-                        await dbService.placeOrder(
-                          user.uid,
-                          cart.items.values.map((item) => {
-                            'productId': item.id,
-                            'productName': item.name,
-                            'quantity': item.quantity,
-                            'price': item.price,
-                          }).toList(),
-                          cart.totalAmount,
-                        );
-                        cart.clearCart();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('¡Pedido realizado con éxito!'),
-                          ),
-                        );
-                        Navigator.of(context).pop();
-                      }
-                    },
+                    onPressed: (cart.totalAmount <= 0)
+                        ? null
+                        : () async {
+                            final user = authProvider.currentUser;
+                            if (user == null) {
+                              return;
+                            }
+
+                            await dbService.placeOrder(
+                              user.uid,
+                              cart.items.values
+                                  .map((item) => {
+                                        'productId': item.id,
+                                        'productName': item.name,
+                                        'quantity': item.quantity,
+                                        'price': item.price,
+                                      })
+                                  .toList(),
+                              cart.totalAmount,
+                            );
+                            
+                            if (!context.mounted) return;
+
+                            Provider.of<CartProvider>(context, listen: false).clearCart();
+                            
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('¡Pedido realizado con éxito!'),
+                              ),
+                            );
+                            Navigator.of(context).pop();
+                          },
                     child: const Text('HACER PEDIDO'),
                   )
                 ],
@@ -122,7 +132,7 @@ class CartItemWidget extends StatelessWidget {
               backgroundImage: NetworkImage(cartItem.imageUrl),
             ),
             title: Text(cartItem.name),
-            subtitle: Text('Total: \${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
+            subtitle: Text('Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
             trailing: Text('${cartItem.quantity} x'),
           ),
         ),

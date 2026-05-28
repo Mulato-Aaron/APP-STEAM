@@ -1,40 +1,21 @@
 {
   "project_info": {
-    "project_number": "143482882099",
-    "project_id": "steamcrud",
-    "storage_bucket": "steamcrud.firebasestorage.app"
+    "project_number": "747899668823",
+    "project_id": "crudsteam",
+    "storage_bucket": "crudsteam.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:143482882099:android:84a5598ed257113ef67b46",
+        "mobilesdk_app_id": "1:747899668823:android:ce4e6d4af906c71cafd612",
         "android_client_info": {
-          "package_name": "com.example.appsteam"
+          "package_name": "com.mulatoaaron.proyecto5"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCqIFnii1j9GwrJh8mbD-8aDzxw2UHzFkE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:143482882099:android:d503a634a37d251ef67b46",
-        "android_client_info": {
-          "package_name": "com.example.myapp"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCqIFnii1j9GwrJh8mbD-8aDzxw2UHzFkE"
+          "current_key": "AIzaSyCG1vOtbfxQx4St8LLxjOFWvf4aD8T19nw"
         }
       ],
       "services": {

@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                   products[i].name,
                   textAlign: TextAlign.center,
                 ),
-                subtitle: Text(
+                subtitle: const Text(
                   '\${products[i].price.toStringAsFixed(2)}',
                   textAlign: TextAlign.center,
                 ),
@@ -84,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Añadido al carrito!'),
+                        content: const Text('Añadido al carrito!'),
                         duration: const Duration(seconds: 2),
                         action: SnackBarAction(
                           label: 'DESHACER',

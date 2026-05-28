@@ -121,7 +121,7 @@ class GameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      clipBehavior: Clip.antiAlias, // Ensures the image respects the card's rounded corners
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: InkWell(
         onTap: () {
@@ -136,7 +136,7 @@ class GameCard extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Hero(
-                 tag: 'gameImage-${game.id}', // Tag único para la animación
+                 tag: 'gameImage-${game.id}',
                  child: Image.network(
                   game.imageUrl,
                   fit: BoxFit.cover,

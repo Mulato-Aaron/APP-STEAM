@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/models/user_order.dart';
@@ -46,7 +47,7 @@ class CartScreen extends StatelessWidget {
                     onPressed: (cart.totalAmount <= 0)
                         ? null
                         : () async {
-                            final user = authProvider.user; // Corregido: de currentUser a user
+                            final user = authProvider.user; 
                             if (user == null) return;
 
                             final newOrder = UserOrder(
@@ -126,8 +127,7 @@ class CartItemWidget extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: ListTile(
             leading: CircleAvatar(
-              // TODO: Necesitamos una imagen para el CartItem. Usaremos un placeholder.
-              child: Text(cartItem.title[0]),
+              child: Text(cartItem.title.isNotEmpty ? cartItem.title[0] : '#'),
             ),
             title: Text(cartItem.title),
             subtitle: Text(

@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/cart_provider.dart';
 import 'core/theme/app_theme.dart';
+import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/screens/shared/auth_wrapper.dart';
 
 void main() async {
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
         home: const AuthWrapper(),
+        routes: {
+          '/login': (context) => const LoginScreen(),
+        },
       ),
     );
   }

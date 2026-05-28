@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/data/services/database_service.dart';
@@ -20,6 +21,8 @@ class _ProductFormState extends State<ProductForm> {
   late String _imageUrl;
   late String _category;
   late int _stock;
+  late String _genre; // Añadido
+  late String _releaseDate; // Añadido
 
   @override
   void initState() {
@@ -30,6 +33,8 @@ class _ProductFormState extends State<ProductForm> {
     _imageUrl = widget.game?.imageUrl ?? '';
     _category = widget.game?.category ?? '';
     _stock = widget.game?.stock ?? 0;
+    _genre = widget.game?.genre ?? ''; // Añadido
+    _releaseDate = widget.game?.releaseDate ?? ''; // Añadido
   }
 
   void _submit() {
@@ -44,6 +49,8 @@ class _ProductFormState extends State<ProductForm> {
         imageUrl: _imageUrl,
         category: _category,
         stock: _stock,
+        genre: _genre, // Añadido
+        releaseDate: _releaseDate, // Añadido
       );
 
       if (widget.game == null) {
@@ -109,6 +116,20 @@ class _ProductFormState extends State<ProductForm> {
                 validator: (value) =>
                     value!.isEmpty ? 'Este campo es obligatorio' : null,
                 onSaved: (value) => _stock = int.parse(value!),
+              ),
+              TextFormField( // Añadido
+                initialValue: _genre,
+                decoration: const InputDecoration(labelText: 'Género'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Este campo es obligatorio' : null,
+                onSaved: (value) => _genre = value!,
+              ),
+              TextFormField( // Añadido
+                initialValue: _releaseDate,
+                decoration: const InputDecoration(labelText: 'Fecha de Lanzamiento'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Este campo es obligatorio' : null,
+                onSaved: (value) => _releaseDate = value!,
               ),
               const SizedBox(height: 20),
               ElevatedButton(

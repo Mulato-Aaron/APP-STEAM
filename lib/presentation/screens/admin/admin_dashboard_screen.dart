@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_5_semestre/presentation/providers/auth_provider.dart';
 import 'package:proyecto_5_semestre/presentation/screens/admin/product_management_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/admin/user_management_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/admin/order_management_screen.dart';
@@ -31,6 +33,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       _selectedIndex = index;
     });
     Navigator.pop(context); // Cierra el drawer
+  }
+
+  void _signOut() {
+    Provider.of<AuthProvider>(context, listen: false).signOut();
   }
 
   @override
@@ -69,6 +75,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               leading: const Icon(Icons.receipt),
               title: const Text('Órdenes'),
               onTap: () => _onItemTapped(2),
+            ),
+            const Divider(), // Separador visual
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Cerrar Sesión'),
+              onTap: _signOut, // Llama al método para cerrar sesión
             ),
           ],
         ),

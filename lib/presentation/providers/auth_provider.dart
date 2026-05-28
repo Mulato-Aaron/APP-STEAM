@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -11,7 +12,7 @@ class AuthProvider with ChangeNotifier {
   bool _isAdmin = false;
   AuthStatus _status = AuthStatus.uninitialized;
 
-  User? get currentUser => _user;
+  User? get user => _user; // Renombrado de currentUser a user
   String get errorMessage => _errorMessage;
   bool get isAdmin => _isAdmin;
   AuthStatus get status => _status;

@@ -46,7 +46,7 @@ class CartScreen extends StatelessWidget {
                     onPressed: (cart.totalAmount <= 0)
                         ? null
                         : () async {
-                            final user = authProvider.currentUser;
+                            final user = authProvider.user; // Corregido: de currentUser a user
                             if (user == null) return;
 
                             final newOrder = UserOrder(

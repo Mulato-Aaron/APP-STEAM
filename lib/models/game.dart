@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Game {
@@ -8,6 +9,8 @@ class Game {
   final int stock;
   final String imageUrl;
   final String category;
+  final String genre; // Añadido
+  final String releaseDate; // Añadido
 
   Game({
     this.id,
@@ -17,6 +20,8 @@ class Game {
     required this.stock,
     required this.imageUrl,
     required this.category,
+    required this.genre, // Añadido
+    required this.releaseDate, // Añadido
   });
 
   // Factory constructor to create a Game from a Firestore document
@@ -30,6 +35,8 @@ class Game {
       stock: (data['stock'] as num?)?.toInt() ?? 0,
       imageUrl: data['imageUrl'] ?? '',
       category: data['category'] ?? '',
+      genre: data['genre'] ?? 'N/A', // Añadido con valor por defecto
+      releaseDate: data['releaseDate'] ?? 'N/A', // Añadido con valor por defecto
     );
   }
 
@@ -42,6 +49,8 @@ class Game {
       'stock': stock,
       'imageUrl': imageUrl,
       'category': category,
+      'genre': genre, // Añadido
+      'releaseDate': releaseDate, // Añadido
     };
   }
 }

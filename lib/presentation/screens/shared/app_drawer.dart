@@ -12,7 +12,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final userEmail = authProvider.currentUser?.email ?? 'no-email@example.com';
+    final userEmail = authProvider.user?.email ?? 'no-email@example.com'; // Corregido
 
     return Drawer(
       child: ListView(

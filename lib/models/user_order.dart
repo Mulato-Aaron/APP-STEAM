@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proyecto_5_semestre/models/cart_item.dart';
 
@@ -34,7 +35,7 @@ class UserOrder {
       'userId': userId,
       'items': items.map((item) => item.toMap()).toList(),
       'total': total,
-      'createdAt': createdAt,
+      'createdAt': Timestamp.fromDate(createdAt.toUtc()), // <-- CORREGIDO
     };
   }
 }

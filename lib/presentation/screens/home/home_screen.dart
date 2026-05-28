@@ -92,36 +92,49 @@ class GameGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final dbService = Provider.of<DatabaseService>(context, listen: false);
     return StreamBuilder<List<Game>>(
-        stream: dbService.getGames(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay juegos disponibles.'));
-          }
+      stream: dbService.getGames(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No hay juegos disponibles.'));
+        }
 
-          final games = snapshot.data!;
+        final games = snapshot.data!;
 
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: games.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3 / 4,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemBuilder: (ctx, i) => GameCard(game: games[i]),
-          );
-        },
-      );
+        // LayoutBuilder proporciona las dimensiones del widget padre.
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            // Definimos un punto de corte (breakpoint) para cambiar el diseño.
+            const double breakpoint = 600.0;
+            final bool isWide = constraints.maxWidth > breakpoint;
+
+            // 4 columnas para web/horizontal, 2 para móvil/vertical.
+            final int crossAxisCount = isWide ? 4 : 2;
+            // Ajustamos la relación de aspecto para que las tarjetas se vean bien.
+            final double childAspectRatio = isWide ? 0.9 : 3 / 4;
+
+            return GridView.builder(
+              padding: const EdgeInsets.all(10.0),
+              itemCount: games.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                childAspectRatio: childAspectRatio,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (ctx, i) => GameCard(game: games[i]),
+            );
+          },
+        );
+      },
+    );
   }
 }
-
 
 class GameCard extends StatelessWidget {
   final Game game;
@@ -136,7 +149,7 @@ class GameCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: InkWell(
         onTap: () {
-           Navigator.of(context).push(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => GameDetailScreen(game: game),
             ),
@@ -147,8 +160,8 @@ class GameCard extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Hero(
-                 tag: 'gameImage-${game.id}',
-                 child: Image.network(
+                tag: 'gameImage-${game.id}',
+                child: Image.network(
                   game.imageUrl,
                   fit: BoxFit.cover,
                 ),
@@ -167,8 +180,8 @@ class GameCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
                 '\$${game.price.toStringAsFixed(2)}',
-                 style: TextStyle(fontSize: 14, color: Colors.grey[400]),
-                 ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+              ),
             ),
           ],
         ),

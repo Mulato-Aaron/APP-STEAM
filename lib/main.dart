@@ -7,7 +7,7 @@ import 'firebase_options.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/cart_provider.dart';
 import 'core/theme/app_theme.dart';
-import 'presentation/screens/shared/splash_screen.dart';
+import 'presentation/screens/shared/auth_wrapper.dart'; // Importamos el nuevo wrapper
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,6 @@ void main() async {
   final dbService = DatabaseService();
 
   // Intentamos añadir el producto de ejemplo, pero de forma segura.
-  // Si esto falla (ej. sin conexión), la app no se bloqueará.
   try {
     developer.log('Intentando añadir producto de ejemplo si es necesario...', name: 'main.startup');
     await dbService.addSampleProduct();
@@ -51,8 +50,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Proyecto 5',
         theme: AppTheme.darkTheme,
-        debugShowCheckedModeBanner: false, // He quitado la banda de "DEBUG"
-        home: const SplashScreen(),
+        debugShowCheckedModeBanner: false, 
+        home: const AuthWrapper(), // ¡Aquí está el cambio clave!
       ),
     );
   }

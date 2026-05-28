@@ -16,8 +16,8 @@ class Game {
   factory Game.fromMap(Map<String, dynamic> map, String id) {
     return Game(
       id: id,
-      name: map['Nombre'] as String,    // Was 'name'
-      genre: map['Genero'] as String,   // Was 'genre'
+      name: map['Nombre'] as String, // Was 'name'
+      genre: map['Genero'] as String, // Was 'genre'
       price: (map['Precio'] as num).toDouble(), // Was 'price'
     );
   }
@@ -26,7 +26,7 @@ class Game {
   // This now writes the Spanish field names to your database.
   Map<String, dynamic> toMap() {
     return {
-      'Nombre': name,   // Was 'name'
+      'Nombre': name, // Was 'name'
       'Genero': genre, // Was 'genre'
       'Precio': price, // Was 'price'
     };

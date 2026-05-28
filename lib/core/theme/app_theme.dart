@@ -11,7 +11,8 @@ class AppTheme {
         bodyLarge: TextStyle(color: Colors.white),
         bodyMedium: TextStyle(color: Colors.white70),
         titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        headlineSmall: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        headlineSmall:
+            TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(

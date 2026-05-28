@@ -9,20 +9,23 @@ class GameProvider with ChangeNotifier {
 
   Stream<List<Game>> get games {
     return _firestore.collection(_collectionPath).snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        try {
-          return Game.fromMap(doc.data(), doc.id);
-        } catch (e, s) {
-          developer.log(
-            'Error parsing game document',
-            name: 'GameProvider',
-            error: e,
-            stackTrace: s,
-            level: 1000, // SEVERE
-          );
-          return null; // Return null for documents that fail to parse
-        }
-      }).whereType<Game>().toList(); // Filter out the nulls
+      return snapshot.docs
+          .map((doc) {
+            try {
+              return Game.fromMap(doc.data(), doc.id);
+            } catch (e, s) {
+              developer.log(
+                'Error parsing game document',
+                name: 'GameProvider',
+                error: e,
+                stackTrace: s,
+                level: 1000, // SEVERE
+              );
+              return null; // Return null for documents that fail to parse
+            }
+          })
+          .whereType<Game>()
+          .toList(); // Filter out the nulls
     });
   }
 
@@ -31,7 +34,10 @@ class GameProvider with ChangeNotifier {
   }
 
   Future<void> updateGame(Game game) {
-    return _firestore.collection(_collectionPath).doc(game.id).update(game.toMap());
+    return _firestore
+        .collection(_collectionPath)
+        .doc(game.id)
+        .update(game.toMap());
   }
 
   Future<void> deleteGame(String id) {

@@ -4,7 +4,10 @@ class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot> getProductsStream() {
-    return _db.collection('products').orderBy('updatedAt', descending: true).snapshots();
+    return _db
+        .collection('products')
+        .orderBy('updatedAt', descending: true)
+        .snapshots();
   }
 
   Future<void> addProduct(Map<String, dynamic> productData) {
@@ -12,7 +15,8 @@ class DatabaseService {
     return _db.collection('products').add(productData);
   }
 
-  Future<void> placeOrder(String userId, List<Map<String, dynamic>> items, double totalAmount) {
+  Future<void> placeOrder(
+      String userId, List<Map<String, dynamic>> items, double totalAmount) {
     return _db.collection('orders').add({
       'userId': userId,
       'items': items,

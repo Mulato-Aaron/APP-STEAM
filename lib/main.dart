@@ -19,9 +19,11 @@ void main() async {
 
   // Intentamos añadir el producto de ejemplo, pero de forma segura.
   try {
-    developer.log('Intentando añadir producto de ejemplo si es necesario...', name: 'main.startup');
+    developer.log('Intentando añadir producto de ejemplo si es necesario...',
+        name: 'main.startup');
     await dbService.addSampleProduct();
-    developer.log('Operación de producto de ejemplo completada.', name: 'main.startup');
+    developer.log('Operación de producto de ejemplo completada.',
+        name: 'main.startup');
   } catch (e, s) {
     developer.log(
       'No se pudo añadir el producto de ejemplo. Esto es seguro y la app continuará.',
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Proyecto 5',
         theme: AppTheme.darkTheme,
-        debugShowCheckedModeBanner: false, 
+        debugShowCheckedModeBanner: false,
         home: const AuthWrapper(), // ¡Aquí está el cambio clave!
       ),
     );

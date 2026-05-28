@@ -55,7 +55,9 @@ class HomeScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final products = snapshot.data!.docs.map((doc) => Product.fromFirestore(doc)).toList();
+          final products = snapshot.data!.docs
+              .map((doc) => Product.fromFirestore(doc))
+              .toList();
 
           return GridView.builder(
             padding: const EdgeInsets.all(10.0),

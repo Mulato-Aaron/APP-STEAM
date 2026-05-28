@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../presentation/providers/auth_provider.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/auth_status.dart';
+import '../home/home_screen.dart'; // RUTA CORREGIDA
 import '../auth/login_screen.dart';
-import '../home/home_screen.dart';
-import '../auth/register_screen.dart';
-
+import '../admin/admin_screen.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
+    final authProvider = Provider.of<AuthProvider>(context);
 
-    // Usamos el estado isLogin para decidir qué pantalla de autenticación mostrar
-    if (authProvider.currentUser == null) {
-      return authProvider.isLogin ? const LoginScreen() : const RegisterScreen();
-    } else {
-      // Si el usuario está autenticado, mostramos la pantalla principal
-      return const HomeScreen();
+    switch (authProvider.status) {
+      case AuthStatus.uninitialized:
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      case AuthStatus.unauthenticated:
+        return const LoginScreen();
+      case AuthStatus.authenticated:
+        if (authProvider.isAdmin) {
+          return const AdminScreen();
+        } else {
+          return const HomeScreen(); // AHORA SE RECONOCE HomeScreen
+        }
     }
   }
 }

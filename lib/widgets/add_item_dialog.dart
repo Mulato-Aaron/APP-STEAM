@@ -28,7 +28,8 @@ class _AddItemDialogState extends State<AddItemDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            final itemProvider = Provider.of<ItemProvider>(context, listen: false);
+            final itemProvider =
+                Provider.of<ItemProvider>(context, listen: false);
             itemProvider.addItem(_textController.text);
             Navigator.of(context).pop();
           },

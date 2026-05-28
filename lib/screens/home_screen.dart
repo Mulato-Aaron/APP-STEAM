@@ -26,29 +26,36 @@ class HomeScreen extends StatelessWidget {
               TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) => value!.isEmpty ? 'Please enter a name' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter a name' : null,
               ),
               TextFormField(
                 controller: genreController,
                 decoration: const InputDecoration(labelText: 'Genre'),
-                validator: (value) => value!.isEmpty ? 'Please enter a genre' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter a genre' : null,
               ),
               TextFormField(
                 controller: priceController,
                 decoration: const InputDecoration(labelText: 'Price'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
-                    value!.isEmpty || double.tryParse(value) == null ? 'Please enter a valid price' : null,
+                    value!.isEmpty || double.tryParse(value) == null
+                        ? 'Please enter a valid price'
+                        : null,
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                final gameProvider = Provider.of<GameProvider>(context, listen: false);
+                final gameProvider =
+                    Provider.of<GameProvider>(context, listen: false);
                 final newGame = Game(
                   id: game?.id,
                   name: nameController.text,
@@ -80,7 +87,8 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => Provider.of<AuthService>(context, listen: false).signOut(),
+            onPressed: () =>
+                Provider.of<AuthService>(context, listen: false).signOut(),
           ),
         ],
       ),
@@ -138,11 +146,15 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 child: Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: ListTile(
-                    title: Text(game.name, style: Theme.of(context).textTheme.titleLarge),
-                    subtitle: Text(game.genre, style: Theme.of(context).textTheme.bodyMedium),
-                    trailing: Text('\$${game.price.toStringAsFixed(2)}', style: Theme.of(context).textTheme.titleMedium),
+                    title: Text(game.name,
+                        style: Theme.of(context).textTheme.titleLarge),
+                    subtitle: Text(game.genre,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    trailing: Text('\$${game.price.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.titleMedium),
                   ),
                 ),
               );

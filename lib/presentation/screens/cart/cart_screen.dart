@@ -61,11 +61,12 @@ class CartScreen extends StatelessWidget {
                                   .toList(),
                               cart.totalAmount,
                             );
-                            
+
                             if (!context.mounted) return;
 
-                            Provider.of<CartProvider>(context, listen: false).clearCart();
-                            
+                            Provider.of<CartProvider>(context, listen: false)
+                                .clearCart();
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('¡Pedido realizado con éxito!'),
@@ -83,7 +84,8 @@ class CartScreen extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemCount: cart.items.length,
-              itemBuilder: (ctx, i) => CartItemWidget(cart.items.values.toList()[i]),
+              itemBuilder: (ctx, i) =>
+                  CartItemWidget(cart.items.values.toList()[i]),
             ),
           )
         ],
@@ -132,7 +134,8 @@ class CartItemWidget extends StatelessWidget {
               backgroundImage: NetworkImage(cartItem.imageUrl),
             ),
             title: Text(cartItem.name),
-            subtitle: Text('Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
+            subtitle: Text(
+                'Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
             trailing: Text('${cartItem.quantity} x'),
           ),
         ),

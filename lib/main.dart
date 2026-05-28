@@ -14,7 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final dbService = DatabaseService();
-  await dbService.addSampleProduct();
+  // await dbService.addSampleProduct();
 
   runApp(MyApp(dbService: dbService));
 }

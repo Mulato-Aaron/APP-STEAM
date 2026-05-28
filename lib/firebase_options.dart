@@ -23,20 +23,11 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -66,4 +57,30 @@ class DefaultFirebaseOptions {
     storageBucket: 'crudsteam.firebasestorage.app',
   );
 
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAN6ezid_I0mP1S-lwXoK4_Bfym3uu3pUs',
+    appId: '1:747899668823:ios:66901a9581533545afd612',
+    messagingSenderId: '747899668823',
+    projectId: 'crudsteam',
+    storageBucket: 'crudsteam.firebasestorage.app',
+    iosBundleId: 'com.example.myapp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAN6ezid_I0mP1S-lwXoK4_Bfym3uu3pUs',
+    appId: '1:747899668823:ios:66901a9581533545afd612',
+    messagingSenderId: '747899668823',
+    projectId: 'crudsteam',
+    storageBucket: 'crudsteam.firebasestorage.app',
+    iosBundleId: 'com.example.myapp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyD6brEFAZgWoORaItSvDt5QVvdUucgvB58',
+    appId: '1:747899668823:web:2baa43fb287fe752afd612',
+    messagingSenderId: '747899668823',
+    projectId: 'crudsteam',
+    authDomain: 'crudsteam.firebaseapp.com',
+    storageBucket: 'crudsteam.firebasestorage.app',
+  );
 }

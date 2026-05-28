@@ -1,50 +1,79 @@
+
 import 'package:flutter/material.dart';
 import 'package:proyecto_5_semestre/presentation/screens/admin/product_management_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/admin/user_management_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/admin/order_management_screen.dart';
 
-// Placeholder para las futuras pantallas
-class UserManagementScreen extends StatelessWidget {
-  const UserManagementScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Gestión de Usuarios - Próximamente'));
-  }
-}
-
-class OrderManagementScreen extends StatelessWidget {
-  const OrderManagementScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Gestión de Órdenes - Próximamente'));
-  }
-}
-
-
-class AdminDashboardScreen extends StatelessWidget {
+class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
 
   @override
+  State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
+}
+
+class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _managementScreens = <Widget>[
+    ProductManagementScreen(),
+    UserManagementScreen(),
+    OrderManagementScreen(),
+  ];
+
+  static const List<String> _screenTitles = <String>[
+    'Gestión de Productos',
+    'Gestión de Usuarios',
+    'Gestión de Órdenes',
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.pop(context); // Cierra el drawer
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3, // Productos, Usuarios, Órdenes
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Panel de Administración'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.games), text: 'Productos'),
-              Tab(icon: Icon(Icons.people), text: 'Usuarios'),
-              Tab(icon: Icon(Icons.receipt), text: 'Órdenes'),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            ProductManagementScreen(), // La pantalla que ya teníamos
-            UserManagementScreen(),      // Placeholder
-            OrderManagementScreen(),     // Placeholder
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_screenTitles[_selectedIndex]),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.deepPurple,
+              ),
+              child: Text(
+                'Panel de Administración',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.games),
+              title: const Text('Productos'),
+              onTap: () => _onItemTapped(0),
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: const Text('Usuarios'),
+              onTap: () => _onItemTapped(1),
+            ),
+            ListTile(
+              leading: const Icon(Icons.receipt),
+              title: const Text('Órdenes'),
+              onTap: () => _onItemTapped(2),
+            ),
           ],
         ),
       ),
+      body: _managementScreens[_selectedIndex],
     );
   }
 }

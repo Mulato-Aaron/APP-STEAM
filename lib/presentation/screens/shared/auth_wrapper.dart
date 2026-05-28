@@ -1,10 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
-import '../../providers/auth_status.dart';
-import '../home/home_screen.dart'; // RUTA CORREGIDA
-import '../auth/login_screen.dart';
-import '../admin/admin_screen.dart';
+import 'package:proyecto_5_semestre/presentation/providers/auth_provider.dart';
+import 'package:proyecto_5_semestre/presentation/providers/auth_status.dart';
+import 'package:proyecto_5_semestre/presentation/screens/admin/admin_dashboard_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/home/home_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/auth/login_screen.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
@@ -24,9 +25,11 @@ class AuthWrapper extends StatelessWidget {
         return const LoginScreen();
       case AuthStatus.authenticated:
         if (authProvider.isAdmin) {
-          return const AdminScreen();
+          // Redirige al panel de administración
+          return const AdminDashboardScreen();
         } else {
-          return const HomeScreen(); // AHORA SE RECONOCE HomeScreen
+          // Redirige a la pantalla de inicio para clientes
+          return const HomeScreen();
         }
     }
   }

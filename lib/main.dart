@@ -1,13 +1,15 @@
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'data/services/database_service.dart';
-import 'firebase_options.dart';
-import 'presentation/providers/auth_provider.dart';
-import 'presentation/providers/cart_provider.dart';
-import 'core/theme/app_theme.dart';
-import 'presentation/screens/auth/login_screen.dart';
-import 'presentation/screens/shared/auth_wrapper.dart';
+import 'package:proyecto_5_semestre/data/services/database_service.dart';
+import 'package:proyecto_5_semestre/firebase_options.dart';
+import 'package:proyecto_5_semestre/presentation/providers/auth_provider.dart';
+import 'package:proyecto_5_semestre/presentation/providers/cart_provider.dart';
+import 'package:proyecto_5_semestre/core/theme/app_theme.dart';
+import 'package:proyecto_5_semestre/presentation/screens/admin/admin_dashboard_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/auth/login_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/shared/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
         home: const AuthWrapper(),
         routes: {
           '/login': (context) => const LoginScreen(),
+          '/admin': (context) => const AdminDashboardScreen(), // <-- Ruta de administrador añadida
         },
       ),
     );

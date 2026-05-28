@@ -96,7 +96,6 @@ class DatabaseService {
     });
   }
 
-  // Método que obtiene los IDs como un Future (se mantiene por si es usado en otro lado)
   Future<List<String>> getOwnedGameIds(String userId) async {
     try {
       var snapshot = await _db
@@ -111,11 +110,10 @@ class DatabaseService {
         name: 'DatabaseService.getOwnedGameIds',
         error: e,
       );
-      return []; // Devolver lista vacía en caso de error
+      return [];
     }
   }
   
-  // NUEVO MÉTODO: Devuelve un Stream con la lista de IDs de juegos del usuario
   Stream<List<String>> getOwnedGameIdsStream(String userId) {
     return _db
         .collection('users')
@@ -123,8 +121,19 @@ class DatabaseService {
         .collection('library')
         .snapshots()
         .map((snapshot) {
-          // Mapea cada documento a su ID y lo convierte en una lista.
           return snapshot.docs.map((doc) => doc.id).toList();
         });
+  }
+
+  // NUEVO MÉTODO: Devuelve un Stream con el historial de compras de un usuario
+  Stream<List<UserOrder>> getOrdersForUser(String userId) {
+    return _db
+        .collection('orders')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true) // Ordenar por fecha, más reciente primero
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => UserOrder.fromFirestore(doc))
+            .toList());
   }
 }

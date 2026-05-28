@@ -8,6 +8,7 @@ import 'package:proyecto_5_semestre/presentation/screens/cart/cart_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/detail/game_detail_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/shared/app_drawer.dart';
 import 'package:proyecto_5_semestre/presentation/screens/user/library_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/user/profile_screen.dart'; // Importar ProfileScreen
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,9 +20,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
+  // Añadir ProfileScreen a la lista de widgets
   static const List<Widget> _widgetOptions = <Widget>[
     GameGrid(),
     LibraryScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -30,13 +33,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Mapeo de índices a títulos
+  static const List<String> _appBarTitles = [
+    'Tienda de Juegos',
+    'Mi Biblioteca',
+    'Mi Perfil',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_selectedIndex == 0 ? 'Tienda de Juegos' : 'Mi Biblioteca'),
+        title: Text(_appBarTitles[_selectedIndex]), // Título dinámico
         actions: [
-          // BOTÓN TEMPORAL PARA LIMPIAR EL CARRITO
           IconButton(
             icon: const Icon(Icons.cleaning_services),
             tooltip: 'Limpiar Carrito Cache',
@@ -75,6 +84,11 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.library_books),
             label: 'Mi Biblioteca',
           ),
+          // Nuevo ítem para el perfil
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Mi Perfil',
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -84,6 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+// El resto del código (GameGrid, GameCard) permanece igual
 
 class GameGrid extends StatelessWidget {
   const GameGrid({super.key});
@@ -106,16 +122,12 @@ class GameGrid extends StatelessWidget {
 
         final games = snapshot.data!;
 
-        // LayoutBuilder proporciona las dimensiones del widget padre.
         return LayoutBuilder(
           builder: (context, constraints) {
-            // Definimos un punto de corte (breakpoint) para cambiar el diseño.
             const double breakpoint = 600.0;
             final bool isWide = constraints.maxWidth > breakpoint;
 
-            // 4 columnas para web/horizontal, 2 para móvil/vertical.
             final int crossAxisCount = isWide ? 4 : 2;
-            // Ajustamos la relación de aspecto para que las tarjetas se vean bien.
             final double childAspectRatio = isWide ? 0.9 : 3 / 4;
 
             return GridView.builder(

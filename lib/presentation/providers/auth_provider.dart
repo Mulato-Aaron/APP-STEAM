@@ -73,6 +73,9 @@ class AuthProvider with ChangeNotifier {
 
       await _authService.signUpWithEmailAndPassword(
           email, password, username, photoUrl, birthDate);
+      
+      await _authService.signInWithEmailAndPassword(email, password);
+
       return true;
     } on FirebaseAuthException catch (e) {
       _errorMessage = _getFirebaseAuthErrorMessage(e.code);

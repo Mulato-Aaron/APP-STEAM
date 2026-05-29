@@ -10,6 +10,8 @@ class Game {
   final String category;
   final String genre;
   final String releaseDate;
+  final String developerId; // Added
+  final String publisherId; // Added
 
   Game({
     this.id,
@@ -20,6 +22,8 @@ class Game {
     required this.category,
     required this.genre,
     required this.releaseDate,
+    required this.developerId, // Added
+    required this.publisherId, // Added
   });
 
   // Factory constructor to create a Game from a Firestore document
@@ -34,6 +38,8 @@ class Game {
       category: data['category'] ?? '',
       genre: data['genre'] ?? 'N/A',
       releaseDate: data['releaseDate'] ?? 'N/A',
+      developerId: data['developerId'] ?? '', // Added
+      publisherId: data['publisherId'] ?? '', // Added
     );
   }
 
@@ -47,6 +53,8 @@ class Game {
       'category': category,
       'genre': genre,
       'releaseDate': releaseDate,
+      'developerId': developerId, // Added
+      'publisherId': publisherId, // Added
     };
   }
 }

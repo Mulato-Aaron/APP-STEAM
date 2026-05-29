@@ -1,8 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_5_semestre/models/developer.dart';
 import 'package:proyecto_5_semestre/models/game.dart';
+import 'package:proyecto_5_semestre/models/publisher.dart';
 import 'package:proyecto_5_semestre/models/user_order.dart';
-import 'dart:developer' as developer; // Importa el logger
+import 'dart:developer' as developer;
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -23,6 +24,58 @@ class DatabaseService {
 
   Future<void> deleteGame(String gameId) {
     return _db.collection('products').doc(gameId).delete();
+  }
+
+  // --- Developer CRUD ---
+  Stream<List<Developer>> getDevelopers() {
+    return _db.collection('developers').snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Developer.fromFirestore(doc)).toList());
+  }
+
+  Future<Developer> getDeveloperById(String id) async {
+    final doc = await _db.collection('developers').doc(id).get();
+    return Developer.fromFirestore(doc);
+  }
+
+  Future<void> addDeveloper(Developer developer) {
+    return _db.collection('developers').add(developer.toFirestore());
+  }
+
+  Future<void> updateDeveloper(Developer developer) {
+    return _db
+        .collection('developers')
+        .doc(developer.id)
+        .update(developer.toFirestore());
+  }
+
+  Future<void> deleteDeveloper(String developerId) {
+    return _db.collection('developers').doc(developerId).delete();
+  }
+
+  // --- Publisher CRUD ---
+  Stream<List<Publisher>> getPublishers() {
+    return _db.collection('publishers').snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Publisher.fromFirestore(doc)).toList());
+  }
+
+  Future<Publisher> getPublisherById(String id) async {
+    final doc = await _db.collection('publishers').doc(id).get();
+    return Publisher.fromFirestore(doc);
+  }
+
+  Future<void> addPublisher(Publisher publisher) {
+    return _db.collection('publishers').add(publisher.toFirestore());
+  }
+
+  Future<void> updatePublisher(Publisher publisher) {
+    return _db
+        .collection('publishers')
+        .doc(publisher.id)
+        .update(publisher.toFirestore());
+  }
+
+  Future<void> deletePublisher(String publisherId) {
+    return _db.collection('publishers').doc(publisherId).delete();
   }
 
   // --- Order Management ---

@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/data/services/database_service.dart';
+import 'package:proyecto_5_semestre/models/developer.dart';
 import 'package:proyecto_5_semestre/models/game.dart';
+import 'package:proyecto_5_semestre/models/publisher.dart';
 
 class ProductForm extends StatefulWidget {
   final Game? game;
@@ -15,6 +16,7 @@ class ProductForm extends StatefulWidget {
 
 class _ProductFormState extends State<ProductForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = true;
   late String _title;
   late String _description;
   late double _price;
@@ -22,24 +24,54 @@ class _ProductFormState extends State<ProductForm> {
   late String _category;
   late String _genre;
   late String _releaseDate;
+  late String? _developerId;
+  late String? _publisherId;
+
+  List<Developer> _developers = [];
+  List<Publisher> _publishers = [];
 
   @override
   void initState() {
     super.initState();
-    _title = widget.game?.title ?? '';
-    _description = widget.game?.description ?? '';
-    _price = widget.game?.price ?? 0.0;
-    _imageUrl = widget.game?.imageUrl ?? '';
-    _category = widget.game?.category ?? '';
-    _genre = widget.game?.genre ?? '';
-    _releaseDate = widget.game?.releaseDate ?? '';
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    final dbService = Provider.of<DatabaseService>(context, listen: false);
+    try {
+      final developers = await dbService.getDevelopers().first;
+      final publishers = await dbService.getPublishers().first;
+
+      setState(() {
+        _developers = developers;
+        _publishers = publishers;
+
+        _title = widget.game?.title ?? '';
+        _description = widget.game?.description ?? '';
+        _price = widget.game?.price ?? 0.0;
+        _imageUrl = widget.game?.imageUrl ?? '';
+        _category = widget.game?.category ?? '';
+        _genre = widget.game?.genre ?? '';
+        _releaseDate = widget.game?.releaseDate ?? '';
+        _developerId = widget.game?.developerId;
+        _publisherId = widget.game?.publisherId;
+
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Handle error appropriately
+      print("Error loading data: $e");
+    }
   }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final dbService = Provider.of<DatabaseService>(context, listen: false);
-      final newGame = Game(
+      final game = Game(
         id: widget.game?.id,
         title: _title,
         description: _description,
@@ -48,12 +80,14 @@ class _ProductFormState extends State<ProductForm> {
         category: _category,
         genre: _genre,
         releaseDate: _releaseDate,
+        developerId: _developerId!,
+        publisherId: _publisherId!,
       );
 
       if (widget.game == null) {
-        dbService.addGame(newGame);
+        dbService.addGame(game);
       } else {
-        dbService.updateGame(newGame);
+        dbService.updateGame(game);
       }
 
       Navigator.of(context).pop();
@@ -62,6 +96,10 @@ class _ProductFormState extends State<ProductForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -119,6 +157,28 @@ class _ProductFormState extends State<ProductForm> {
                 validator: (value) =>
                     value!.isEmpty ? 'Este campo es obligatorio' : null,
                 onSaved: (value) => _releaseDate = value!,
+              ),
+              DropdownButtonFormField<String>(
+                value: _developerId,
+                decoration: const InputDecoration(labelText: 'Desarrollador'),
+                items: _developers.map((dev) {
+                  return DropdownMenuItem(value: dev.id, child: Text(dev.name));
+                }).toList(),
+                onChanged: (value) => setState(() => _developerId = value),
+                validator: (value) =>
+                    value == null ? 'Este campo es obligatorio' : null,
+                onSaved: (value) => _developerId = value,
+              ),
+              DropdownButtonFormField<String>(
+                value: _publisherId,
+                decoration: const InputDecoration(labelText: 'Editor'),
+                items: _publishers.map((pub) {
+                  return DropdownMenuItem(value: pub.id, child: Text(pub.name));
+                }).toList(),
+                onChanged: (value) => setState(() => _publisherId = value),
+                validator: (value) =>
+                    value == null ? 'Este campo es obligatorio' : null,
+                onSaved: (value) => _publisherId = value,
               ),
               const SizedBox(height: 20),
               ElevatedButton(

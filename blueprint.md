@@ -45,3 +45,27 @@ This document outlines the architecture, design, and features of the Steam CRUD 
 
 - The app uses the `go_router` package for declarative routing.
 - The router is configured to handle authentication state changes, redirecting users as needed.
+
+## Current Plan: Add Developers and Publishers
+
+**Objective:** Expand the data model to include Developers and Publishers, creating a more relational data structure.
+
+**Steps:**
+
+1.  **Create Data Models:**
+    *   `lib/models/developer.dart`: Define the `Developer` class with fields `id`, `name`, `imageUrl`, and `gameIds`.
+    *   `lib/models/publisher.dart`: Define the `Publisher` class with fields `id`, `name`, `imageUrl`, and `gameIds`.
+
+2.  **Update Game Model:**
+    *   Modify `lib/models/game.dart` to include `developerId` and `publisherId` fields to link to the new collections.
+
+3.  **Update Firestore Security Rules:**
+    *   Add rules in `firestore.rules` for the new `developers` and `publishers` collections, allowing authenticated users to read and admins to write.
+
+4.  **Extend DatabaseService:**
+    *   Add CRUD (Create, Read, Update, Delete) methods for both `Developer` and `Publisher` entities in `lib/data/services/database_service.dart`.
+
+5.  **Enhance User Interface:**
+    *   **Game Detail Screen:** Display the name of the developer and publisher.
+    *   **Admin/CRUD Screens:** Create new screens to manage developers and publishers (view list, add, edit, delete).
+    *   **Game Form:** Modify the add/edit game form to use dropdown menus (`DropdownButtonFormField`) to select an existing developer and publisher, instead of free-text input.

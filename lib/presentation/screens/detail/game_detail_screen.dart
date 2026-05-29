@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_5_semestre/data/services/database_service.dart';
+import 'package:proyecto_5_semestre/models/developer.dart';
 import 'package:proyecto_5_semestre/models/game.dart';
+import 'package:proyecto_5_semestre/models/publisher.dart';
 import 'package:proyecto_5_semestre/presentation/providers/cart_provider.dart';
 import 'package:proyecto_5_semestre/presentation/providers/catalog_provider.dart';
-import 'package:proyecto_5_semestre/presentation/screens/cart/cart_screen.dart'; // Asegúrate de importar CartScreen
+import 'package:proyecto_5_semestre/presentation/screens/cart/cart_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/user/library_screen.dart';
 
 class GameDetailScreen extends StatelessWidget {
   final Game game;
+  final DatabaseService _databaseService = DatabaseService();
 
-  const GameDetailScreen({super.key, required this.game});
+  GameDetailScreen({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
@@ -62,30 +66,27 @@ class GameDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  _buildInfoSection(context, theme),
+                  const SizedBox(height: 16),
                   Text(
                     game.description,
                     style: theme.textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 24),
-                  // Lógica del botón con ambos providers
                   Consumer<CatalogProvider>(
                     builder: (context, catalog, child) {
                       final isOwned = game.id != null ? catalog.isGameOwned(game.id!) : false;
 
                       if (isOwned) {
-                        // 1. Si el juego es del usuario -> Botón a la biblioteca
                         return _buildLibraryButton(context);
                       } else {
-                        // 2. Si no es del usuario, revisamos el carrito
                         return Consumer<CartProvider>(
                           builder: (context, cart, child) {
                             final isInCart = game.id != null ? cart.isInCart(game.id!) : false;
 
                             if (isInCart) {
-                              // 2.1. Si está en el carrito -> Botón al carrito
                               return _buildCartButton(context);
                             } else {
-                              // 2.2. Si no está en el carrito -> Botón para añadir
                               return _buildAddToCartButton(context, cart);
                             }
                           },
@@ -102,7 +103,55 @@ class GameDetailScreen extends StatelessWidget {
     );
   }
 
-  // Widget para el botón "Ver en la Biblioteca"
+  Widget _buildInfoSection(BuildContext context, ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildInfoRow<Developer>(
+          label: 'Desarrollador',
+          future: _databaseService.getDeveloperById(game.developerId),
+          builder: (data) => Text(data.name, style: theme.textTheme.bodyLarge),
+        ),
+        const SizedBox(height: 8),
+        _buildInfoRow<Publisher>(
+          label: 'Editor',
+          future: _databaseService.getPublisherById(game.publisherId),
+          builder: (data) => Text(data.name, style: theme.textTheme.bodyLarge),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow<T>({
+    required String label,
+    required Future<T> future,
+    required Widget Function(T data) builder,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold)),
+        FutureBuilder<T>(
+          future: future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              );
+            }
+            if (snapshot.hasError || !snapshot.hasData) {
+              return const Text('No disponible');
+            }
+            return builder(snapshot.data as T);
+          },
+        ),
+      ],
+    );
+  }
+
+
   Widget _buildLibraryButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
@@ -124,7 +173,6 @@ class GameDetailScreen extends StatelessWidget {
     );
   }
 
-  // Widget para el botón "Ver mi Carrito"
   Widget _buildCartButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
@@ -140,13 +188,12 @@ class GameDetailScreen extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
           textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          backgroundColor: Theme.of(context).colorScheme.secondary, // Un color que indique acción
+          backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
       ),
     );
   }
 
-  // Widget para el botón "Añadir al Carrito"
   Widget _buildAddToCartButton(BuildContext context, CartProvider cart) {
     return SizedBox(
       width: double.infinity,

@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/presentation/providers/auth_provider.dart';
+import 'package:proyecto_5_semestre/presentation/screens/admin/developer_management_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/admin/product_management_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/admin/publisher_management_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/admin/user_management_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/admin/order_management_screen.dart';
 
@@ -20,12 +21,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     ProductManagementScreen(),
     UserManagementScreen(),
     OrderManagementScreen(),
+    DeveloperManagementScreen(),
+    PublisherManagementScreen(),
   ];
 
   static const List<String> _screenTitles = <String>[
     'Gestión de Productos',
     'Gestión de Usuarios',
     'Gestión de Órdenes',
+    'Gestión de Desarrolladores',
+    'Gestión de Editores',
   ];
 
   void _onItemTapped(int index) {
@@ -75,6 +80,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               leading: const Icon(Icons.receipt),
               title: const Text('Órdenes'),
               onTap: () => _onItemTapped(2),
+            ),
+             ListTile(
+              leading: const Icon(Icons.developer_mode),
+              title: const Text('Desarrolladores'),
+              onTap: () => _onItemTapped(3),
+            ),
+             ListTile(
+              leading: const Icon(Icons.publish),
+              title: const Text('Editores'),
+              onTap: () => _onItemTapped(4),
             ),
             const Divider(), // Separador visual
             ListTile(

@@ -7,6 +7,7 @@ import 'package:proyecto_5_semestre/models/publisher.dart';
 import 'package:proyecto_5_semestre/presentation/providers/cart_provider.dart';
 import 'package:proyecto_5_semestre/presentation/providers/catalog_provider.dart';
 import 'package:proyecto_5_semestre/presentation/screens/cart/cart_screen.dart';
+import 'package:proyecto_5_semestre/presentation/screens/creators/creator_products_screen.dart';
 import 'package:proyecto_5_semestre/presentation/screens/user/library_screen.dart';
 
 class GameDetailScreen extends StatelessWidget {
@@ -117,13 +118,57 @@ class GameDetailScreen extends StatelessWidget {
         _buildInfoRow<Developer>(
           label: 'Desarrollador',
           future: _databaseService.getDeveloperById(game.developerId),
-          builder: (data) => Text(data.name, style: theme.textTheme.bodyLarge),
+          builder: (data) {
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreatorProductsScreen(
+                      creatorId: game.developerId,
+                      creatorType: 'developer',
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                data.name,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.secondary,
+                  decoration: TextDecoration.underline,
+                  decorationColor: theme.colorScheme.secondary,
+                ),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 8),
         _buildInfoRow<Publisher>(
           label: 'Editor',
           future: _databaseService.getPublisherById(game.publisherId),
-          builder: (data) => Text(data.name, style: theme.textTheme.bodyLarge),
+          builder: (data) {
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreatorProductsScreen(
+                      creatorId: game.publisherId,
+                      creatorType: 'publisher',
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                data.name,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.secondary,
+                  decoration: TextDecoration.underline,
+                  decorationColor: theme.colorScheme.secondary,
+                ),
+              ),
+            );
+          },
         ),
       ],
     );

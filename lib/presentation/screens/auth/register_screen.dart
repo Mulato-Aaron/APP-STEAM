@@ -65,14 +65,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     if (mounted) {
-      if (!success) {
+      // Si el registro es exitoso, navega a la pantalla de inicio de sesión
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('¡Registro exitoso! Por favor, inicia sesión.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } else {
+        // Si falla, muestra el mensaje de error
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(authProvider.errorMessage)),
         );
+        setState(() {
+          _isLoading = false;
+        });
       }
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -112,7 +124,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     labelText: 'Contraseña',
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                        _isPasswordObscured
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
                       onPressed: () {
                         setState(() {
@@ -139,11 +153,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     labelText: 'Confirmar Contraseña',
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isConfirmPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                        _isConfirmPasswordObscured
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
                       onPressed: () {
                         setState(() {
-                          _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
+                          _isConfirmPasswordObscured =
+                              !_isConfirmPasswordObscured;
                         });
                       },
                     ),

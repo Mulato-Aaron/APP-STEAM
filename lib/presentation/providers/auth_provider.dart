@@ -28,37 +28,23 @@ class AuthProvider with ChangeNotifier {
       _status = AuthStatus.unauthenticated;
     } else {
       _user = user;
-      _status = AuthStatus.authenticated;
-
-      // Notifica a los listeners inmediatamente para navegar fuera de las pantallas de autenticación.
-      // La UI asumirá inicialmente que el usuario no es un administrador.
-      notifyListeners();
-
-      // Ahora, comprueba el estado de administrador en segundo plano y notifica de nuevo si cambia.
       await _checkAdminStatus();
+      _status = AuthStatus.authenticated;
     }
-    // Una notificación final para asegurar que la UI sea consistente después de la comprobación de administrador.
     notifyListeners();
   }
 
   Future<void> _checkAdminStatus() async {
-    if (_user == null) {
-      _isAdmin = false;
-      return;
-    }
+    if (_user == null) return;
 
     try {
-      // Fuerza una actualización para obtener los últimos custom claims.
-      final idTokenResult = await _user!.getIdTokenResult(true);
+      final idTokenResult = await _user!.getIdTokenResult(true); 
       final claims = idTokenResult.claims;
-      final newIsAdmin = claims != null && claims['admin'] == true;
-      if (newIsAdmin != _isAdmin) {
-        _isAdmin = newIsAdmin;
-      }
+      _isAdmin = claims != null && claims['admin'] == true;
     } catch (e) {
-      // Si hay un error, asume que no es un administrador.
       _isAdmin = false;
     }
+     notifyListeners();
   }
 
   Future<bool> signIn(String email, String password) async {
@@ -78,15 +64,12 @@ class AuthProvider with ChangeNotifier {
       String? photoUrl, DateTime birthDate) async {
     try {
       _errorMessage = '';
+      // Solo crea el usuario, no inicies sesión automáticamente
       await _authService.signUpWithEmailAndPassword(
           email, password, username, photoUrl, birthDate);
-
-      await _authService.signInWithEmailAndPassword(email, password);
-
       return true;
     } on FirebaseAuthException catch (e) {
       _errorMessage = _getFirebaseAuthErrorMessage(e.code);
-      _status = AuthStatus.unauthenticated;
       notifyListeners();
       return false;
     }

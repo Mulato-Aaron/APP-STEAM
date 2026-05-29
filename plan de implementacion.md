@@ -19,8 +19,6 @@ Para garantizar la integridad transaccional y funcional del sistema original dur
 
 ### 0.2 Estructura del Proyecto Flutter (Clean Architecture)
 
-El código fuente de la aplicación móvil se estructurará siguiendo los principios de separación de responsabilidades:
-
 
 ```
 
@@ -984,4 +982,25 @@ El archivo estructurado en formato Markdown (.md) ha sido generado con éxito y 
 
 5. **Fase 4: Aseguramiento, Pruebas y Despliegue:** Checklist exhaustivo de validación en la consola web de Firebase (Autenticación, Índices compuestos para ordenamiento y Reglas de producción). Se provee la secuencia precisa de instrucciones de consola para realizar la limpieza de caché del compilador (`flutter clean`), la inyección limpia de dependencias de producción (`flutter pub get`) y el empaquetado final del artefacto optimizado y ofuscado en modo de producción (`flutter build apk --release`).
 
-```
+---
+
+## Fase 5: Implementación de Búsqueda y Filtros en la Tienda
+
+Para mejorar la usabilidad del catálogo de productos, se implementará una funcionalidad de búsqueda de texto completo y filtros dinámicos en la pantalla de la tienda del cliente (`catalog_screen.dart`).
+
+### 5.1 Modificaciones en la Interfaz de Usuario (UI)
+
+*   **Barra de Búsqueda (`TextField`):** Se añadirá un campo de texto en la parte superior de la pantalla del catálogo. Los usuarios podrán introducir términos de búsqueda para filtrar productos por su `title`.
+*   **Filtros Rápidos (`ChoiceChip`):** Debajo de la barra de búsqueda, se mostrarán chips para aplicar filtros predefinidos. Los filtros iniciales serán:
+    *   **Precio:** Opciones para ordenar por "Más barato" y "Más caro".
+    *   **Editor/Desarrollador:** (Funcionalidad futura) Se sentarán las bases para filtrar por estos campos si se añaden al modelo `product`.
+
+### 5.2 Lógica de Estado y Consulta a Firestore
+
+*   **Gestión de Estado:** Se utilizará el `catalog_provider.dart` existente (o se creará uno si no existe) para gestionar el estado de los siguientes elementos:
+    *   El término de búsqueda actual (`String`).
+    *   El filtro de ordenamiento de precio seleccionado (`enum` o `String`).
+*   **Consulta Dinámica:** La consulta a la colección `/products` en `catalog_screen.dart` se modificará para ser dinámica:
+    *   Se utilizará una cláusula `where` para filtrar los documentos cuyo campo `title` contenga el término de búsqueda (se realizará un filtrado inicial en el cliente para simular un `contains` ya que Firestore no lo soporta nativamente de forma eficiente para subcadenas).
+    *   Se utilizará `orderBy` para ordenar los resultados según el filtro de precio seleccionado. Por ejemplo, `orderBy('price', descending: true)` para "Más caro".
+*   **Reconstrucción Reactiva:** La interfaz de usuario se reconstruirá automáticamente (`notifyListeners()` y `Consumer`) cada vez que el término de búsqueda o los filtros cambien, mostrando la lista de productos actualizada.

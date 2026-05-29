@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Añadir ProfileScreen a la lista de widgets
   static const List<Widget> _widgetOptions = <Widget>[
-    GameGrid(),
+    GameStore(), // Cambiado de GameGrid a GameStore
     LibraryScreen(),
     ProfileScreen(),
   ];
@@ -99,10 +99,74 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// El resto del código (GameGrid, GameCard) permanece igual
+class GameStore extends StatefulWidget {
+  const GameStore({super.key});
+
+  @override
+  _GameStoreState createState() => _GameStoreState();
+}
+
+class _GameStoreState extends State<GameStore> {
+  String _searchTerm = '';
+  String _priceFilter = 'none';
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: 'Buscar juegos...',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchTerm = value;
+              });
+            },
+          ),
+        ),
+        Wrap(
+          spacing: 8.0,
+          children: <Widget>[
+            ChoiceChip(
+              label: Text('Precio: Más barato'),
+              selected: _priceFilter == 'asc',
+              onSelected: (selected) {
+                setState(() {
+                  _priceFilter = selected ? 'asc' : 'none';
+                });
+              },
+            ),
+            ChoiceChip(
+              label: Text('Precio: Más caro'),
+              selected: _priceFilter == 'desc',
+              onSelected: (selected) {
+                setState(() {
+                  _priceFilter = selected ? 'desc' : 'none';
+                });
+              },
+            ),
+          ],
+        ),
+        Expanded(
+          child: GameGrid(searchTerm: _searchTerm, priceFilter: _priceFilter),
+        ),
+      ],
+    );
+  }
+}
 
 class GameGrid extends StatelessWidget {
-  const GameGrid({super.key});
+  final String searchTerm;
+  final String priceFilter;
+
+  const GameGrid({super.key, required this.searchTerm, required this.priceFilter});
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +184,24 @@ class GameGrid extends StatelessWidget {
           return const Center(child: Text('No hay juegos disponibles.'));
         }
 
-        final games = snapshot.data!;
+        var games = snapshot.data!;
+        
+        // Lógica de filtrado
+        if (searchTerm.isNotEmpty) {
+          games = games.where((game) => game.title.toLowerCase().contains(searchTerm.toLowerCase())).toList();
+        }
+
+        // Lógica de ordenación
+        if (priceFilter != 'none') {
+          games.sort((a, b) {
+            if (priceFilter == 'asc') {
+              return a.price.compareTo(b.price);
+            } else {
+              return b.price.compareTo(a.price);
+            }
+          });
+        }
+
 
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -128,7 +209,7 @@ class GameGrid extends StatelessWidget {
             final bool isWide = constraints.maxWidth > breakpoint;
 
             final int crossAxisCount = isWide ? 4 : 2;
-            final double childAspectRatio = isWide ? 0.9 : 3 / 4;
+            final double childAspectRatio = isWide ? 0.6 : 2 / 3;
 
             return GridView.builder(
               padding: const EdgeInsets.all(10.0),

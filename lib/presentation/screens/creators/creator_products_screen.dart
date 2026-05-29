@@ -31,15 +31,15 @@ class _CreatorProductsScreenState extends State<CreatorProductsScreen> {
 
   Future<List<Game>> _fetchProductsByCreator() async {
     final fieldToQuery = widget.creatorType == 'developer' ? 'developerId' : 'publisherId';
+    // CORRECCIÓN: Se cambia 'games' por 'products'
     final querySnapshot = await FirebaseFirestore.instance
-        .collection('games')
+        .collection('products')
         .where(fieldToQuery, isEqualTo: widget.creatorId)
         .get();
 
     if (querySnapshot.docs.isEmpty) {
       return [];
     }
-    // Corregido: Se elimina Future.wait y se mapea directamente.
     return querySnapshot.docs.map((doc) => Game.fromFirestore(doc)).toList();
   }
 

@@ -6,9 +6,10 @@ import 'package:proyecto_5_semestre/presentation/providers/auth_provider.dart';
 class CatalogProvider with ChangeNotifier {
   final AuthProvider authProvider;
   final DatabaseService databaseService;
-  
+
   List<String> _ownedGameIds = [];
-  StreamSubscription? _librarySubscription; // Suscripción al stream de la biblioteca
+  StreamSubscription?
+      _librarySubscription; // Suscripción al stream de la biblioteca
 
   CatalogProvider({required this.authProvider, required this.databaseService}) {
     authProvider.addListener(_onAuthStateChanged);
@@ -22,11 +23,14 @@ class CatalogProvider with ChangeNotifier {
   }
 
   void _onAuthStateChanged() {
-    _librarySubscription?.cancel(); // Cancelar la suscripción anterior si existe
+    _librarySubscription
+        ?.cancel(); // Cancelar la suscripción anterior si existe
 
     if (authProvider.user != null) {
       // Escuchar el stream de la biblioteca en tiempo real
-      _librarySubscription = databaseService.getOwnedGameIdsStream(authProvider.user!.uid).listen((gameIds) {
+      _librarySubscription = databaseService
+          .getOwnedGameIdsStream(authProvider.user!.uid)
+          .listen((gameIds) {
         _ownedGameIds = gameIds;
         notifyListeners(); // Notificar a los widgets que la lista cambió
       });
@@ -40,7 +44,8 @@ class CatalogProvider with ChangeNotifier {
   @override
   void dispose() {
     authProvider.removeListener(_onAuthStateChanged);
-    _librarySubscription?.cancel(); // Asegurarse de cancelar la suscripción al destruir el provider
+    _librarySubscription
+        ?.cancel(); // Asegurarse de cancelar la suscripción al destruir el provider
     super.dispose();
   }
 }

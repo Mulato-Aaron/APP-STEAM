@@ -38,7 +38,8 @@ class GameDetailScreen extends StatelessWidget {
                         height: 300,
                         color: Colors.grey[800],
                         child: const Center(
-                          child: Icon(Icons.broken_image, size: 100, color: Colors.grey),
+                          child: Icon(Icons.broken_image,
+                              size: 100, color: Colors.grey),
                         ),
                       );
                     },
@@ -46,7 +47,8 @@ class GameDetailScreen extends StatelessWidget {
                 : Container(
                     height: 300,
                     color: Colors.grey[800],
-                    child: const Icon(Icons.videogame_asset_off, size: 100, color: Colors.grey),
+                    child: const Icon(Icons.videogame_asset_off,
+                        size: 100, color: Colors.grey),
                   ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -55,7 +57,8 @@ class GameDetailScreen extends StatelessWidget {
                 children: [
                   Text(
                     game.title,
-                    style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -75,14 +78,18 @@ class GameDetailScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   Consumer<CatalogProvider>(
                     builder: (context, catalog, child) {
-                      final isOwned = game.id != null ? catalog.isGameOwned(game.id!) : false;
+                      final isOwned = game.id != null
+                          ? catalog.isGameOwned(game.id!)
+                          : false;
 
                       if (isOwned) {
                         return _buildLibraryButton(context);
                       } else {
                         return Consumer<CartProvider>(
                           builder: (context, cart, child) {
-                            final isInCart = game.id != null ? cart.isInCart(game.id!) : false;
+                            final isInCart = game.id != null
+                                ? cart.isInCart(game.id!)
+                                : false;
 
                             if (isInCart) {
                               return _buildCartButton(context);
@@ -150,7 +157,6 @@ class GameDetailScreen extends StatelessWidget {
       ],
     );
   }
-
 
   Widget _buildLibraryButton(BuildContext context) {
     return SizedBox(

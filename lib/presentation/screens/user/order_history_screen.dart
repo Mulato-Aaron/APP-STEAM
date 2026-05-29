@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart'; // Para formatear la fecha
@@ -12,7 +11,8 @@ class OrderHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final databaseService = Provider.of<DatabaseService>(context, listen: false);
+    final databaseService =
+        Provider.of<DatabaseService>(context, listen: false);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -48,7 +48,8 @@ class OrderHistoryScreen extends StatelessWidget {
               return Card(
                 elevation: 4,
                 margin: const EdgeInsets.only(bottom: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -59,11 +60,13 @@ class OrderHistoryScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Pedido #${order.id?.substring(0, 6) ?? 'N/A'}', // Muestra una parte del ID
-                            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                            style: theme.textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           Text(
                             DateFormat('dd/MM/yyyy').format(order.createdAt),
-                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                            style: theme.textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -80,16 +83,18 @@ class OrderHistoryScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         'Artículos Comprados:',
-                        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       ...order.items.map((item) => ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(item.imageUrl),
-                        ),
-                        title: Text(item.title),
-                        subtitle: Text('Precio: \$${item.price.toStringAsFixed(2)}'),
-                      )),
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(item.imageUrl),
+                            ),
+                            title: Text(item.title),
+                            subtitle: Text(
+                                'Precio: \$${item.price.toStringAsFixed(2)}'),
+                          )),
                     ],
                   ),
                 ),

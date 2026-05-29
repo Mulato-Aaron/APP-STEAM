@@ -132,7 +132,8 @@ class _ProductFormState extends State<ProductForm> {
               ),
               TextFormField(
                 initialValue: _imageUrl,
-                decoration: const InputDecoration(labelText: 'URL de la Imagen'),
+                decoration:
+                    const InputDecoration(labelText: 'URL de la Imagen'),
                 validator: (value) =>
                     value!.isEmpty ? 'Este campo es obligatorio' : null,
                 onSaved: (value) => _imageUrl = value!,
@@ -153,7 +154,8 @@ class _ProductFormState extends State<ProductForm> {
               ),
               TextFormField(
                 initialValue: _releaseDate,
-                decoration: const InputDecoration(labelText: 'Fecha de Lanzamiento'),
+                decoration:
+                    const InputDecoration(labelText: 'Fecha de Lanzamiento'),
                 validator: (value) =>
                     value!.isEmpty ? 'Este campo es obligatorio' : null,
                 onSaved: (value) => _releaseDate = value!,

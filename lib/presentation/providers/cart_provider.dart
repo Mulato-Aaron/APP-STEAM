@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,13 +36,14 @@ class CartProvider with ChangeNotifier {
   Future<void> _saveCart() async {
     final prefs = await SharedPreferences.getInstance();
     try {
-       final cartData = json.encode({
+      final cartData = json.encode({
         'items': _items.values.map((item) => item.toMap()).toList(),
       });
       await prefs.setString('cart', cartData);
       developer.log('Carrito guardado exitosamente.', name: 'CartProvider');
     } catch (e) {
-      developer.log('Error al guardar el carrito: $e', name: 'CartProvider', level: 1000);
+      developer.log('Error al guardar el carrito: $e',
+          name: 'CartProvider', level: 1000);
     }
   }
 
@@ -53,29 +53,31 @@ class CartProvider with ChangeNotifier {
       return;
     }
     try {
-      final extractedData = json.decode(prefs.getString('cart')!) as Map<String, dynamic>;
+      final extractedData =
+          json.decode(prefs.getString('cart')!) as Map<String, dynamic>;
       final List<dynamic> itemsList = extractedData['items'];
-      
+
       _items = {};
       for (var itemData in itemsList) {
         final cartItem = CartItem.fromMap(itemData as Map<String, dynamic>);
         _items[cartItem.id] = cartItem;
       }
       notifyListeners();
-       developer.log('Carrito cargado exitosamente.', name: 'CartProvider');
+      developer.log('Carrito cargado exitosamente.', name: 'CartProvider');
     } catch (e) {
-       developer.log('Error al cargar el carrito: $e', name: 'CartProvider', level: 1000);
-       // Si hay un error, limpiar el carrito para evitar corrupción
-       await prefs.remove('cart');
-       _items = {};
-       notifyListeners();
+      developer.log('Error al cargar el carrito: $e',
+          name: 'CartProvider', level: 1000);
+      // Si hay un error, limpiar el carrito para evitar corrupción
+      await prefs.remove('cart');
+      _items = {};
+      notifyListeners();
     }
   }
 
   void addItem(Game game) {
     // Si el juego ya está, no hacemos nada, porque el botón no debería estar visible.
     if (_items.containsKey(game.id)) {
-      return; 
+      return;
     }
     // Se añade siempre con cantidad 1.
     _items.putIfAbsent(

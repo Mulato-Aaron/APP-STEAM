@@ -6,7 +6,8 @@ class PublisherManagementScreen extends StatefulWidget {
   const PublisherManagementScreen({super.key});
 
   @override
-  State<PublisherManagementScreen> createState() => _PublisherManagementScreenState();
+  State<PublisherManagementScreen> createState() =>
+      _PublisherManagementScreenState();
 }
 
 class _PublisherManagementScreenState extends State<PublisherManagementScreen> {
@@ -39,7 +40,8 @@ class _PublisherManagementScreenState extends State<PublisherManagementScreen> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () => _showPublisherDialog(publisher: publisher),
+                      onPressed: () =>
+                          _showPublisherDialog(publisher: publisher),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
@@ -65,7 +67,8 @@ class _PublisherManagementScreenState extends State<PublisherManagementScreen> {
 
   void _showPublisherDialog({Publisher? publisher}) {
     final nameController = TextEditingController(text: publisher?.name ?? '');
-    final imageUrlController = TextEditingController(text: publisher?.imageUrl ?? '');
+    final imageUrlController =
+        TextEditingController(text: publisher?.imageUrl ?? '');
 
     showDialog(
       context: context,
@@ -81,7 +84,8 @@ class _PublisherManagementScreenState extends State<PublisherManagementScreen> {
               ),
               TextField(
                 controller: imageUrlController,
-                decoration: const InputDecoration(labelText: 'URL de la Imagen'),
+                decoration:
+                    const InputDecoration(labelText: 'URL de la Imagen'),
               ),
             ],
           ),

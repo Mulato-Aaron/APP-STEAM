@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/models/user_order.dart';
@@ -47,7 +46,7 @@ class CartScreen extends StatelessWidget {
                     onPressed: (cart.totalAmount <= 0)
                         ? null
                         : () async {
-                            final user = authProvider.user; 
+                            final user = authProvider.user;
                             if (user == null) return;
 
                             final newOrder = UserOrder(
@@ -61,7 +60,8 @@ class CartScreen extends StatelessWidget {
 
                             if (!context.mounted) return;
 
-                            Provider.of<CartProvider>(context, listen: false).clearCart();
+                            Provider.of<CartProvider>(context, listen: false)
+                                .clearCart();
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

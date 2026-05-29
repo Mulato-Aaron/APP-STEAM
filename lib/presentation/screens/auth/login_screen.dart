@@ -62,7 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Correo Electrónico'),
+                  decoration:
+                      const InputDecoration(labelText: 'Correo Electrónico'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) =>
                       value!.isEmpty ? 'Por favor, ingrese un correo' : null,
@@ -72,13 +73,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _passwordController,
                   decoration: const InputDecoration(labelText: 'Contraseña'),
                   obscureText: true,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Por favor, ingrese una contraseña' : null,
+                  validator: (value) => value!.isEmpty
+                      ? 'Por favor, ingrese una contraseña'
+                      : null,
                 ),
                 const SizedBox(height: 24.0),
 
                 // 6. Cambiar el botón según el estado de autenticación
-                if (authStatus == AuthStatus.uninitialized) // 'uninitialized' se usa para "cargando"
+                if (authStatus ==
+                    AuthStatus
+                        .uninitialized) // 'uninitialized' se usa para "cargando"
                   const CircularProgressIndicator()
                 else
                   ElevatedButton(
@@ -90,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterScreen()),
                     );
                   },
                   child: const Text('¿No tienes cuenta? Regístrate'),

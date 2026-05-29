@@ -6,7 +6,8 @@ class DeveloperManagementScreen extends StatefulWidget {
   const DeveloperManagementScreen({super.key});
 
   @override
-  State<DeveloperManagementScreen> createState() => _DeveloperManagementScreenState();
+  State<DeveloperManagementScreen> createState() =>
+      _DeveloperManagementScreenState();
 }
 
 class _DeveloperManagementScreenState extends State<DeveloperManagementScreen> {
@@ -39,7 +40,8 @@ class _DeveloperManagementScreenState extends State<DeveloperManagementScreen> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () => _showDeveloperDialog(developer: developer),
+                      onPressed: () =>
+                          _showDeveloperDialog(developer: developer),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
@@ -65,13 +67,16 @@ class _DeveloperManagementScreenState extends State<DeveloperManagementScreen> {
 
   void _showDeveloperDialog({Developer? developer}) {
     final nameController = TextEditingController(text: developer?.name ?? '');
-    final imageUrlController = TextEditingController(text: developer?.imageUrl ?? '');
+    final imageUrlController =
+        TextEditingController(text: developer?.imageUrl ?? '');
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(developer == null ? 'Añadir Desarrollador' : 'Editar Desarrollador'),
+          title: Text(developer == null
+              ? 'Añadir Desarrollador'
+              : 'Editar Desarrollador'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -81,7 +86,8 @@ class _DeveloperManagementScreenState extends State<DeveloperManagementScreen> {
               ),
               TextField(
                 controller: imageUrlController,
-                decoration: const InputDecoration(labelText: 'URL de la Imagen'),
+                decoration:
+                    const InputDecoration(labelText: 'URL de la Imagen'),
               ),
             ],
           ),

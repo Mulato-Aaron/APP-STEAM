@@ -25,7 +25,7 @@ class CartItem {
       imageUrl: game.imageUrl, // <-- AÑADIDO
     );
   }
-  
+
   // For Firestore serialization
   Map<String, dynamic> toMap() {
     return {

@@ -14,8 +14,8 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _usernameController = TextEditingController();
-  final _photoController = TextEditingController();
   final _birthDateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -25,8 +25,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _usernameController.dispose();
-    _photoController.dispose();
     _birthDateController.dispose();
     super.dispose();
   }
@@ -58,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _emailController.text.trim(),
       _passwordController.text.trim(),
       _usernameController.text.trim(),
-      _photoController.text.trim().isEmpty ? null : _photoController.text.trim(),
+      null, // No photo URL
       _selectedDate!,
     );
 
@@ -88,9 +88,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 TextFormField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(labelText: 'Nombre de usuario'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Por favor, ingrese un nombre de usuario' : null,
+                  decoration:
+                      const InputDecoration(labelText: 'Nombre de usuario'),
+                  validator: (value) => value!.isEmpty
+                      ? 'Por favor, ingrese un nombre de usuario'
+                      : null,
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
@@ -118,8 +120,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _photoController,
-                  decoration: const InputDecoration(labelText: 'Foto (URL) - Opcional'),
+                  controller: _confirmPasswordController,
+                  decoration: const InputDecoration(labelText: 'Confirmar Contraseña'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, confirme su contraseña';
+                    }
+                    if (value != _passwordController.text) {
+                      return 'Las contraseñas no coinciden';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(

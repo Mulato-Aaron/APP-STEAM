@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -39,7 +38,8 @@ class AuthProvider with ChangeNotifier {
     if (_user == null) return;
 
     try {
-      final idTokenResult = await _user!.getIdTokenResult(true); // Forzar la actualización del token
+      final idTokenResult = await _user!
+          .getIdTokenResult(true); // Forzar la actualización del token
       final claims = idTokenResult.claims;
       _isAdmin = claims != null && claims['admin'] == true;
     } catch (e) {
@@ -50,7 +50,7 @@ class AuthProvider with ChangeNotifier {
   Future<bool> signIn(String email, String password) async {
     try {
       _errorMessage = '';
-      _status = AuthStatus.uninitialized; 
+      _status = AuthStatus.uninitialized;
       notifyListeners();
 
       await _authService.signInWithEmailAndPassword(email, password);
@@ -64,13 +64,15 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> signUp(String email, String password, String username, String? photoUrl, DateTime birthDate) async {
+  Future<bool> signUp(String email, String password, String username,
+      String? photoUrl, DateTime birthDate) async {
     try {
       _errorMessage = '';
       _status = AuthStatus.uninitialized;
       notifyListeners();
 
-      await _authService.signUpWithEmailAndPassword(email, password, username, photoUrl, birthDate);
+      await _authService.signUpWithEmailAndPassword(
+          email, password, username, photoUrl, birthDate);
       return true;
     } on FirebaseAuthException catch (e) {
       _errorMessage = _getFirebaseAuthErrorMessage(e.code);

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/presentation/providers/auth_provider.dart';
@@ -24,7 +23,8 @@ class ProfileScreen extends StatelessWidget {
           if (user != null)
             ListTile(
               leading: const Icon(Icons.email, size: 30),
-              title: const Text('Correo Electrónico', style: TextStyle(fontWeight: FontWeight.bold)),
+              title: const Text('Correo Electrónico',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(user.email ?? 'No disponible'),
             ),
           const Divider(height: 32),
@@ -35,7 +35,8 @@ class ProfileScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const OrderHistoryScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const OrderHistoryScreen()),
               );
             },
           ),
@@ -49,7 +50,8 @@ class ProfileScreen extends StatelessWidget {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('¿Cerrar Sesión?'),
-                  content: const Text('¿Estás seguro de que quieres cerrar sesión?'),
+                  content:
+                      const Text('¿Estás seguro de que quieres cerrar sesión?'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(false),

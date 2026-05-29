@@ -83,7 +83,8 @@ class DatabaseService {
     developer.log(
       'Intentando realizar el pedido...',
       name: 'DatabaseService.placeOrder',
-      error: 'UserID: ${order.userId}, Items: ${order.items.length}, Total: ${order.total}',
+      error:
+          'UserID: ${order.userId}, Items: ${order.items.length}, Total: ${order.total}',
     );
 
     try {
@@ -95,7 +96,7 @@ class DatabaseService {
       if (order.items.isEmpty) {
         throw Exception('No se puede procesar un pedido sin artículos.');
       }
-      
+
       for (var item in order.items) {
         DocumentReference libraryRef = _db
             .collection('users')
@@ -113,22 +114,24 @@ class DatabaseService {
 
       await batch.commit();
 
-      developer.log('¡Pedido realizado con éxito en Firestore!', name: 'DatabaseService.placeOrder');
-
+      developer.log('¡Pedido realizado con éxito en Firestore!',
+          name: 'DatabaseService.placeOrder');
     } catch (e, s) {
-      final errorMessage = 'Error al realizar el pedido en Firestore: ${e.toString()}';
+      final errorMessage =
+          'Error al realizar el pedido en Firestore: ${e.toString()}';
       developer.log(
         errorMessage,
         name: 'DatabaseService.placeOrder',
         error: e,
         stackTrace: s,
-        level: 1000, 
+        level: 1000,
       );
-      throw Exception('Ocurrió un error al procesar tu pedido. Detalles: ${e.toString()}');
+      throw Exception(
+          'Ocurrió un error al procesar tu pedido. Detalles: ${e.toString()}');
     }
   }
 
-   Stream<List<Game>> getUserLibrary(String userId) {
+  Stream<List<Game>> getUserLibrary(String userId) {
     return _db
         .collection('users')
         .doc(userId)
@@ -138,8 +141,9 @@ class DatabaseService {
       List<Game> libraryGames = [];
       for (var doc in snapshot.docs) {
         String? productId = doc.data()['productId'];
-        if(productId != null) {
-          DocumentSnapshot gameDoc = await _db.collection('products').doc(productId).get();
+        if (productId != null) {
+          DocumentSnapshot gameDoc =
+              await _db.collection('products').doc(productId).get();
           if (gameDoc.exists) {
             libraryGames.add(Game.fromFirestore(gameDoc));
           }
@@ -151,11 +155,8 @@ class DatabaseService {
 
   Future<List<String>> getOwnedGameIds(String userId) async {
     try {
-      var snapshot = await _db
-          .collection('users')
-          .doc(userId)
-          .collection('library')
-          .get();
+      var snapshot =
+          await _db.collection('users').doc(userId).collection('library').get();
       return snapshot.docs.map((doc) => doc.id).toList();
     } catch (e) {
       developer.log(
@@ -166,7 +167,7 @@ class DatabaseService {
       return [];
     }
   }
-  
+
   Stream<List<String>> getOwnedGameIdsStream(String userId) {
     return _db
         .collection('users')
@@ -174,8 +175,8 @@ class DatabaseService {
         .collection('library')
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs.map((doc) => doc.id).toList();
-        });
+      return snapshot.docs.map((doc) => doc.id).toList();
+    });
   }
 
   // NUEVO MÉTODO: Devuelve un Stream con el historial de compras de un usuario
@@ -183,10 +184,10 @@ class DatabaseService {
     return _db
         .collection('orders')
         .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true) // Ordenar por fecha, más reciente primero
+        .orderBy('createdAt',
+            descending: true) // Ordenar por fecha, más reciente primero
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => UserOrder.fromFirestore(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => UserOrder.fromFirestore(doc)).toList());
   }
 }

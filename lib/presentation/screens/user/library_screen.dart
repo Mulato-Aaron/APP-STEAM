@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/data/services/database_service.dart';
@@ -34,7 +33,8 @@ class LibraryScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.gamepad_outlined, size: 80, color: Colors.grey),
+                        Icon(Icons.gamepad_outlined,
+                            size: 80, color: Colors.grey),
                         SizedBox(height: 16),
                         Text(
                           'Tu biblioteca está vacía',
@@ -56,18 +56,25 @@ class LibraryScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final game = libraryGames[index];
                     return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       elevation: 4,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(game.imageUrl),
                         ),
-                        title: Text(game.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('Comprado el: ${game.releaseDate}'), // Placeholder
+                        title: Text(game.title,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text(
+                            'Comprado el: ${game.releaseDate}'), // Placeholder
                         trailing: ElevatedButton(
-                          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Accediendo a ${game.title}...')),
+                          onPressed: () =>
+                              ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Accediendo a ${game.title}...')),
                           ),
                           child: const Text('Jugar'),
                         ),

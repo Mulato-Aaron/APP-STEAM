@@ -56,7 +56,8 @@ class ProductManagementScreen extends StatelessWidget {
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: ListTile(
-                  title: Text(game.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(game.title,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -94,7 +95,8 @@ class ProductManagementScreen extends StatelessWidget {
                                   TextButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(true),
-                                    child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+                                    child: const Text('Eliminar',
+                                        style: TextStyle(color: Colors.red)),
                                   ),
                                 ],
                               ),

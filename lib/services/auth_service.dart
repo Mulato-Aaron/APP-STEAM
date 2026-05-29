@@ -48,8 +48,8 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<User?> signUpWithEmailAndPassword(
-      String email, String password, String username, String? photoUrl, DateTime birthDate) async {
+  Future<User?> signUpWithEmailAndPassword(String email, String password,
+      String username, String? photoUrl, DateTime birthDate) async {
     try {
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(

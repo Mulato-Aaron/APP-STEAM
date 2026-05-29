@@ -103,10 +103,10 @@ class GameStore extends StatefulWidget {
   const GameStore({super.key});
 
   @override
-  _GameStoreState createState() => _GameStoreState();
+  GameStoreState createState() => GameStoreState();
 }
 
-class _GameStoreState extends State<GameStore> {
+class GameStoreState extends State<GameStore> {
   String _searchTerm = '';
   String _priceFilter = 'none';
 
@@ -119,7 +119,7 @@ class _GameStoreState extends State<GameStore> {
           child: TextField(
             decoration: InputDecoration(
               labelText: 'Buscar juegos...',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
               ),
@@ -135,7 +135,7 @@ class _GameStoreState extends State<GameStore> {
           spacing: 8.0,
           children: <Widget>[
             ChoiceChip(
-              label: Text('Precio: Más barato'),
+              label: const Text('Precio: Más barato'),
               selected: _priceFilter == 'asc',
               onSelected: (selected) {
                 setState(() {
@@ -144,7 +144,7 @@ class _GameStoreState extends State<GameStore> {
               },
             ),
             ChoiceChip(
-              label: Text('Precio: Más caro'),
+              label: const Text('Precio: Más caro'),
               selected: _priceFilter == 'desc',
               onSelected: (selected) {
                 setState(() {

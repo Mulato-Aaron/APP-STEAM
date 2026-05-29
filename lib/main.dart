@@ -37,11 +37,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthProvider, CatalogProvider>(
           create: (context) => CatalogProvider(
             authProvider: Provider.of<AuthProvider>(context, listen: false),
-            databaseService: Provider.of<DatabaseService>(context, listen: false),
+            databaseService:
+                Provider.of<DatabaseService>(context, listen: false),
           ),
           update: (context, auth, previousCatalog) => CatalogProvider(
             authProvider: auth,
-            databaseService: Provider.of<DatabaseService>(context, listen: false),
+            databaseService:
+                Provider.of<DatabaseService>(context, listen: false),
           ),
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/auth_service.dart';
+import 'package:proyecto_5_semestre/presentation/screens/auth/register_screen.dart';
+import 'package:proyecto_5_semestre/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,22 +14,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLogin = true;
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
       final authService = Provider.of<AuthService>(context, listen: false);
-      if (_isLogin) {
-        await authService.signInWithEmailAndPassword(
-          _emailController.text,
-          _passwordController.text,
-        );
-      } else {
-        await authService.signUpWithEmailAndPassword(
-          _emailController.text,
-          _passwordController.text,
-        );
-      }
+      await authService.signInWithEmailAndPassword(
+        _emailController.text,
+        _passwordController.text,
+      );
     }
   }
 
@@ -43,8 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(_isLogin ? 'Login' : 'Sign Up',
-                    style: Theme.of(context).textTheme.displayLarge),
+                Text('Login', style: Theme.of(context).textTheme.displayLarge),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
@@ -62,18 +54,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       : null,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                    onPressed: _submit,
-                    child: Text(_isLogin ? 'Login' : 'Sign Up')),
+                ElevatedButton(onPressed: _submit, child: const Text('Login')),
                 TextButton(
                   onPressed: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                    });
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(),
+                      ),
+                    );
                   },
-                  child: Text(_isLogin
-                      ? 'Create an account'
-                      : 'I already have an account'),
+                  child: const Text('Create an account'),
                 ),
                 TextButton(
                   onPressed: () {

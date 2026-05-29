@@ -1,12 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   User? _user;
 
   User? get user => _user;
+
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   AuthService() {
     _auth.authStateChanges().listen((User? user) {
@@ -45,7 +49,7 @@ class AuthService with ChangeNotifier {
   }
 
   Future<User?> signUpWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password, String username, String? photoUrl, DateTime birthDate) async {
     try {
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -53,6 +57,17 @@ class AuthService with ChangeNotifier {
         password: password,
       );
       _user = userCredential.user;
+
+      if (_user != null) {
+        await _firestore.collection('users').doc(_user!.uid).set({
+          'username': username,
+          'email': email,
+          'photoUrl': photoUrl,
+          'birthDate': Timestamp.fromDate(birthDate),
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+
       notifyListeners();
       return _user;
     } catch (e) {

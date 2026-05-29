@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/data/services/database_service.dart';
@@ -62,8 +64,6 @@ class _ProductFormState extends State<ProductForm> {
       setState(() {
         _isLoading = false;
       });
-      // Handle error appropriately
-      print("Error loading data: $e");
     }
   }
 

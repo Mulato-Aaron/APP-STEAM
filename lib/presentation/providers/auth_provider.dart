@@ -3,22 +3,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:proyecto_5_semestre/services/auth_service.dart';
 import 'auth_status.dart';
 
 class AuthProvider with ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthService _authService = AuthService();
   User? _user;
   String _errorMessage = '';
   bool _isAdmin = false;
   AuthStatus _status = AuthStatus.uninitialized;
 
-  User? get user => _user; // Renombrado de currentUser a user
+  User? get user => _user;
   String get errorMessage => _errorMessage;
   bool get isAdmin => _isAdmin;
   AuthStatus get status => _status;
 
   AuthProvider() {
-    _auth.authStateChanges().listen(_onAuthStateChanged);
+    _authService.authStateChanges.listen(_onAuthStateChanged);
   }
 
   Future<void> _onAuthStateChanged(User? user) async {
@@ -43,19 +44,17 @@ class AuthProvider with ChangeNotifier {
       _isAdmin = claims != null && claims['admin'] == true;
     } catch (e) {
       _isAdmin = false;
-      // Considera registrar este error en lugar de mostrarlo al usuario directamente
-      // a menos que sea un error crítico que deba conocer.
     }
   }
 
   Future<bool> signIn(String email, String password) async {
     try {
       _errorMessage = '';
-      _status = AuthStatus.uninitialized; // Mostrar carga mientras se loguea
+      _status = AuthStatus.uninitialized; 
       notifyListeners();
 
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      // El listener _onAuthStateChanged se encargará del resto.
+      await _authService.signInWithEmailAndPassword(email, password);
+
       return true;
     } on FirebaseAuthException catch (e) {
       _errorMessage = _getFirebaseAuthErrorMessage(e.code);
@@ -65,13 +64,13 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> signUp(String email, String password) async {
+  Future<bool> signUp(String email, String password, String username, String? photoUrl, DateTime birthDate) async {
     try {
       _errorMessage = '';
       _status = AuthStatus.uninitialized;
       notifyListeners();
 
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _authService.signUpWithEmailAndPassword(email, password, username, photoUrl, birthDate);
       return true;
     } on FirebaseAuthException catch (e) {
       _errorMessage = _getFirebaseAuthErrorMessage(e.code);
@@ -82,8 +81,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
-    // El listener _onAuthStateChanged se encargará de actualizar el estado.
+    await _authService.signOut();
   }
 
   void clearErrorMessage() {

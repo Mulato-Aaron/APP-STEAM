@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_5_semestre/presentation/providers/auth_status.dart';
@@ -15,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isPasswordObscured = true;
 
   @override
   void dispose() {
@@ -71,8 +73,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Contraseña'),
-                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordObscured = !_isPasswordObscured;
+                        });
+                      },
+                    ),
+                  ),
+                  obscureText: _isPasswordObscured,
                   validator: (value) => value!.isEmpty
                       ? 'Por favor, ingrese una contraseña'
                       : null,

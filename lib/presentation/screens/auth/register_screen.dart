@@ -20,6 +20,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   DateTime? _selectedDate;
+  bool _isPasswordObscured = true;
+  bool _isConfirmPasswordObscured = true;
 
   @override
   void dispose() {
@@ -106,8 +108,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Contraseña'),
-                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordObscured = !_isPasswordObscured;
+                        });
+                      },
+                    ),
+                  ),
+                  obscureText: _isPasswordObscured,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, ingrese una contraseña';
@@ -121,8 +135,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _confirmPasswordController,
-                  decoration: const InputDecoration(labelText: 'Confirmar Contraseña'),
-                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar Contraseña',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
+                        });
+                      },
+                    ),
+                  ),
+                  obscureText: _isConfirmPasswordObscured,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, confirme su contraseña';
